@@ -24,5 +24,8 @@ public class JSON_Parsor {
 	public static <A> A fromJson(JsonNode jNode, Class<A> classArg) throws JsonProcessingException, IllegalArgumentException {
 		return objectMapper.treeToValue(jNode, classArg);
 	}
-				
+	
+	public static String toJson(Object obj) throws JsonProcessingException, IllegalArgumentException {
+		return objectMapper.writeValueAsString(objectMapper.valueToTree(obj));
+	}		
 }

@@ -39,10 +39,12 @@ public class TemplateController {
 	}
 	
 	@GetMapping
-	public Template getTemplateBytemplatename(@RequestParam("template_name") String template_name){
+	public String getTemplateBytemplatename(@RequestParam("template_name") String template_name){
 		try {
 			System.out.println("trying getMapping Method");
-			return templateService.findByTemplateName(template_name);
+			Template template =  templateService.findByTemplateName(template_name);
+			String json =  JSON_Parsor.toJson(template);
+			return json;
 						
 		}
 		catch(Exception e) {
