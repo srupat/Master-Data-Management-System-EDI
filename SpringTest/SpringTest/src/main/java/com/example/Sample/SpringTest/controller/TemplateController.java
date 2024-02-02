@@ -1,7 +1,5 @@
 package com.example.Sample.SpringTest.controller;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.service.TemplateService;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import ObjectMapper.JSON_Parsor;
 
 
 @RestController
@@ -21,9 +22,12 @@ public class TemplateController {
 	private TemplateService templateService;
 	
 	@PostMapping
-	public String save(@RequestBody Template template) {		
+	public Template save(@RequestBody String json) {		
 		System.out.println("post mapping method called");
 		try{
+			JsonNode jNode = JSON_Parsor.parse(json);
+			System.out.println(jNode.get("template_name").toString());
+			Template template = JSON_Parsor.fromJson(jNode, Template.class);
 			templateService.save(template);
 		}
 		catch(Exception e) {
@@ -31,7 +35,7 @@ public class TemplateController {
 			
 		}
 		System.out.println("No exception occured");
-		return template.toString();
+		return null;//template.toString();
 	}
 	
 	@GetMapping
