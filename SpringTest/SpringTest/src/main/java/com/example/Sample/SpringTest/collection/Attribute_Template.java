@@ -1,6 +1,6 @@
 package com.example.Sample.SpringTest.collection;
 
-class Attribute {
+class Attribute_Template {
 	private String attribute_name;
 	private String attribute_type;
 	
