@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Template {
 	
 	String template_name;
-	List<Attribute> attributes;
+	List<Attribute_Template> attributes;
 	
 	public String getTemplate_name() {
 		return template_name;
@@ -16,10 +16,10 @@ public class Template {
 	public void setTemplate_name(String template_name) {
 		this.template_name = template_name;
 	}
-	public List<Attribute> getAttributes() {
+	public List<Attribute_Template> getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(List<Attribute> attributes) {
+	public void setAttributes(List<Attribute_Template> attributes) {
 		this.attributes = attributes;
 	}
 	

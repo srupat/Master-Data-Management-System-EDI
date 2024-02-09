@@ -1,11 +1,7 @@
 package com.example.Sample.SpringTest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.service.TemplateService;
@@ -15,13 +11,13 @@ import ObjectMapper.JSON_Parsor;
 
 
 @RestController
-@RequestMapping("/template")
+//@RequestMapping("/template")
 public class TemplateController {
 	
 	@Autowired
 	private TemplateService templateService;
 	
-	@PostMapping
+	@PostMapping("/create/template")
 	public Template save(@RequestBody String json) {		
 		System.out.println("post mapping method called");
 		try{
@@ -38,8 +34,9 @@ public class TemplateController {
 		return null;//template.toString();
 	}
 	
-	@GetMapping
-	public String getTemplateBytemplatename(@RequestParam("template_name") String template_name){
+	@GetMapping("/template/{template_name}")
+	@ResponseBody
+	public String getTemplateBytemplatename(@PathVariable String template_name){
 		try {
 			System.out.println("trying getMapping Method");
 			Template template =  templateService.findByTemplateName(template_name);
