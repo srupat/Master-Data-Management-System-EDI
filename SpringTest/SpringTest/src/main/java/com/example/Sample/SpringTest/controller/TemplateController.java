@@ -17,12 +17,11 @@ import ObjectMapper.JSON_Parsor;
 @RestController
 @RequestMapping("/template")
 public class TemplateController {
-	
-	@Autowired
+
 	private TemplateService templateService;
 	
 	@PostMapping
-	public Template save(@RequestBody String json) {		
+	public Template save(@RequestBody String json) {
 		System.out.println("post mapping method called");
 		try{
 			JsonNode jNode = JSON_Parsor.parse(json);
