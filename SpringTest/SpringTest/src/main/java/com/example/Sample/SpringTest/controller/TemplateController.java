@@ -13,8 +13,7 @@ import ObjectMapper.JSON_Parsor;
 @RestController
 //@RequestMapping("/template")
 public class TemplateController {
-	
-	@Autowired
+
 	private TemplateService templateService;
 	
 	@PostMapping("/create/template")
