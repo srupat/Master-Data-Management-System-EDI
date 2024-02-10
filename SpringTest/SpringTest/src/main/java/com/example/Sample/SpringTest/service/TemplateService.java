@@ -11,5 +11,7 @@ public interface TemplateService {
 	List<Template> getAllTemplates();
 	
 	Template findByTemplateName(String templateName);
+
+	String getAttributeType(String templateName);
 	
 }

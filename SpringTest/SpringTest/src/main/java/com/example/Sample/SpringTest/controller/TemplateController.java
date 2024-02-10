@@ -17,13 +17,10 @@ public class TemplateController {
 	private TemplateService templateService;
 	
 	@PostMapping("/create/template")
-	public Template save(@RequestBody String json) {		
+	public Template save(@RequestBody Template temp) {
 		System.out.println("post mapping method called");
 		try{
-			JsonNode jNode = JSON_Parsor.parse(json);
-			System.out.println(jNode.get("template_name").toString());
-			Template template = JSON_Parsor.fromJson(jNode, Template.class);
-			templateService.save(template);
+			templateService.save(temp);
 		}
 		catch(Exception e) {
 			System.err.println(e);

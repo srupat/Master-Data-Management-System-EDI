@@ -1,6 +1,7 @@
 package com.example.Sample.SpringTest.service;
 import java.util.List;
 
+import com.example.Sample.SpringTest.collection.Attribute_Template;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +39,21 @@ public class TemplateServiceImplementation implements TemplateService {
 		// TODO Auto-generated method stub
 		return templateRepository.findByTemplateName(name);
 		
+	}
+
+	@Override
+	public String getAttributeType(String templateName){
+		Template temp = templateRepository.findByTemplateName(templateName);
+
+		if(temp!=null){
+			List<Attribute_Template> attributes = temp.getAttributes();
+			for(Attribute_Template attribute : attributes){
+				if(temp.getTemplate_name().equals(templateName)){
+					return attribute.getAttribute_type();
+				}
+			}
+		}
+		return null;
 	}
 
 }
