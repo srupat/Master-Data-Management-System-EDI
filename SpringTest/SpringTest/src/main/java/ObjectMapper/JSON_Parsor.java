@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JSON_Parsor {
 	
-	private static ObjectMapper objectMapper = getDefaultObjectMapper();
+	public static ObjectMapper objectMapper = getDefaultObjectMapper();
 	
 	private static ObjectMapper getDefaultObjectMapper() {
 		
