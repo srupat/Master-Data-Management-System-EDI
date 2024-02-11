@@ -59,3 +59,4 @@ class ObjType extends Attribute_Object{
         this.obj = obj;
     }
 }
+

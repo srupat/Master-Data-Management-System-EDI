@@ -24,12 +24,13 @@ public class Object {
         attributes.add(obj);
     }
 
-    public void createNewObj(String name, String val, String type){
+    public Attribute_Object createNewObj(String name, String val, String type){
         // check from the template the datatype of this object having the same name
+        Attribute_Object obj;
         switch(type){
             case "int":
                 try {
-                    Attribute_Object obj = new Int(name, Integer.parseInt(val));
+                    obj = new Int(name, Integer.parseInt(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
@@ -37,7 +38,7 @@ public class Object {
                 break;
             case "float":
                 try {
-                    Attribute_Object obj;
+//                    Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Float(name, Float.parseFloat(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
@@ -46,7 +47,7 @@ public class Object {
                 break;
             case "bool":
                 try {
-                    Attribute_Object obj;
+//                    Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Bool(name, Boolean.parseBoolean(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
@@ -55,7 +56,7 @@ public class Object {
                 break;
             default:
                 try {
-                    Attribute_Object obj;
+//                    Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Strings(name, val);
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
@@ -64,6 +65,7 @@ public class Object {
                 break;
             // for parsing of obj type, first form an object using jackson from the given json
         }
+        return obj;
 
     }
 
