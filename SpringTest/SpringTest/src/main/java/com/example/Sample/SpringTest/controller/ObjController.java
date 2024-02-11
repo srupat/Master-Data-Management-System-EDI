@@ -34,12 +34,14 @@ public class ObjController {
     public Object submitObject(@RequestBody String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
 
+    try {
+
         String objTemplate = jsonObject.getString("obj_template");
         String objName = jsonObject.getString("obj_name");
         JSONArray attributesArray = jsonObject.getJSONArray("attributes");
 
-       List<Attribute_Object> attributeList = new ArrayList<>();
-       Object obj = new Object(objTemplate, objName, attributeList);
+        List<Attribute_Object> attributeList = new ArrayList<>();
+        Object obj = new Object(objTemplate, objName, attributeList);
 
         String attributeType = templateService.getAttributeType(objTemplate);
 
@@ -53,6 +55,10 @@ public class ObjController {
 
         System.out.println(attributeList);
         orepo.save(obj);
+    }
+    catch(Exception e){
+        e.printStackTrace();
+    }
 
         return null;
     }
