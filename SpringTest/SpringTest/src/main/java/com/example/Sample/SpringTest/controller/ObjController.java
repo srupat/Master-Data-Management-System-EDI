@@ -32,7 +32,6 @@ public class ObjController {
 
     @PostMapping("/create/object")
     public Object submitObject(@RequestBody String json) throws JSONException {
-//        final ObjectMapper objectMapper = new ObjectMapper();
         JSONObject jsonObject = new JSONObject(json);
 
         String objTemplate = jsonObject.getString("obj_template");
@@ -50,40 +49,11 @@ public class ObjController {
             String attributeValue = attributeObject.getString("val");
 
             Attribute_Object attribute = obj.createNewObj(attributeName, attributeValue, attributeType);
-            attributeList.add(attribute);
         }
 
         System.out.println(attributeList);
+        orepo.save(obj);
 
-
-//        try{
-//            JsonNode jsonNode = objectMapper.readTree(jsonString);
-//
-//            String objName = jsonNode.get("obj_name").asText();
-//            String objTemplate = jsonNode.get("obj_template").asText();
-//            String attributeType = templateService.getAttributeType(objTemplate);
-//            System.out.println(objName + objTemplate + attributeType);
-
-
-//            List<Attribute_Object> attributes = objectMapper.convertValue(jsonNode.get("attributes"), new TypeReference<List<Attribute_Object>>() {});
-//            Object obj = new Object(objTemplate, objName, attributes);
-//            // get the name and val in string from the json string attributes
-//            for (JsonNode attributeNode : jsonNode.get("attributes")) {
-//                String attributeName = attributeNode.get("name").asText();
-//                String attributeValue = attributeNode.get("val").asText();
-//                System.out.println(attributeName + attributeValue);
-//
-//                obj.createNewObj(attributeName, attributeValue, attributeType);
-//            }
-
-            orepo.save(obj);
-
-
-
-//            }
-//        catch (Exception e){
-//            e.printStackTrace();
-//        }
         return null;
     }
 
