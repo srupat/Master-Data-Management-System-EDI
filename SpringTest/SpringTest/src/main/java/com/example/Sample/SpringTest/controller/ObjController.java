@@ -2,19 +2,19 @@ package com.example.Sample.SpringTest.controller;
 
 import com.example.Sample.SpringTest.collection.Attribute_Object;
 import com.example.Sample.SpringTest.collection.Object;
+import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.repository.ObjectRepository;
 import com.example.Sample.SpringTest.service.TemplateService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.Sample.SpringTest.service.ObjectService;
+import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ObjectMapper.JSON_Parsor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,9 @@ public class ObjController {
 
     @Autowired
     private TemplateService templateService;
+
+    @Autowired
+    private ObjectService oservice;
 
     @PostMapping("/create/object")
     public Object submitObject(@RequestBody String json) throws JSONException {
@@ -66,7 +69,30 @@ public class ObjController {
     }
 
     @GetMapping("/objects")
-    public List<Object> getAllObjects(){
-        return orepo.findAll();
+    public List<Object> getAllObjects() {
+        try {
+            return orepo.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/object/{obj_name}")
+    @ResponseBody
+    public String getTemplateBytemplatename(@PathVariable String obj_name){
+        try {
+            System.out.println("trying getMapping Method");
+            Object object =  oservice.findByObjName(obj_name);
+            String json =  JSON_Parsor.toJson(object);
+            return json;
+
+        }
+        catch(Exception e) {
+            System.out.println("got some exception !! :(");
+            System.err.println(e);
+            return null;
+        }
+
     }
 }
