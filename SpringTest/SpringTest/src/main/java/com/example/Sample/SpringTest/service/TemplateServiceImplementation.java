@@ -42,13 +42,13 @@ public class TemplateServiceImplementation implements TemplateService {
 	}
 
 	@Override
-	public String getAttributeType(String templateName){
+	public String getAttributeType(String templateName, String att_name){
 		Template temp = templateRepository.findByTemplateName(templateName);
 
 		if(temp!=null){
 			List<Attribute_Template> attributes = temp.getAttributes();
 			for(Attribute_Template attribute : attributes){
-				if(temp.getTemplate_name().equals(templateName)){
+				if(temp.getTemplate_name().equals(templateName) && att_name.equals(attribute.getAttribute_name())){
 					return attribute.getAttribute_type();
 				}
 			}

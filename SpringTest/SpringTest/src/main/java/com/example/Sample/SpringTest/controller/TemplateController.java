@@ -14,6 +14,7 @@ import ObjectMapper.JSON_Parsor;
 //@RequestMapping("/template")
 public class TemplateController {
 
+	@Autowired
 	private TemplateService templateService;
 	
 	@PostMapping("/create/template")
@@ -27,7 +28,7 @@ public class TemplateController {
 			
 		}
 		System.out.println("No exception occured");
-		return null;//template.toString();
+		return null;  //template.toString();
 	}
 	
 	@GetMapping("/template/{template_name}")

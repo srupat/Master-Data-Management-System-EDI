@@ -43,12 +43,14 @@ public class ObjController {
         List<Attribute_Object> attributeList = new ArrayList<>();
         Object obj = new Object(objTemplate, objName, attributeList);
 
-        String attributeType = templateService.getAttributeType(objTemplate);
+
 
         for (int i = 0; i < attributesArray.length(); i++) {
+
             JSONObject attributeObject = attributesArray.getJSONObject(i);
             String attributeName = attributeObject.getString("name");
             String attributeValue = attributeObject.getString("val");
+            String attributeType = templateService.getAttributeType(objTemplate, attributeName);
 
             Attribute_Object attribute = obj.createNewObj(attributeName, attributeValue, attributeType);
         }
