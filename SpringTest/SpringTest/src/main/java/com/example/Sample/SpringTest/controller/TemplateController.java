@@ -1,5 +1,7 @@
 package com.example.Sample.SpringTest.controller;
 
+import com.example.Sample.SpringTest.collection.Object;
+import com.example.Sample.SpringTest.repository.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import ObjectMapper.JSON_Parsor;
 
+import java.util.List;
+
 
 @RestController
 //@RequestMapping("/template")
@@ -16,6 +20,10 @@ public class TemplateController {
 
 	@Autowired
 	private TemplateService templateService;
+
+
+	@Autowired
+	private TemplateRepository trepo;
 	
 	@PostMapping("/create/template")
 	public Template save(@RequestBody Template temp) {
@@ -47,6 +55,16 @@ public class TemplateController {
 			return null;
 		}
 		
+	}
+
+	@GetMapping("/templates")
+	public List<Template> getAllObjects() {
+		try {
+			return trepo.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
