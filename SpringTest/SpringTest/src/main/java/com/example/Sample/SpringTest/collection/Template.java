@@ -2,12 +2,14 @@ package com.example.Sample.SpringTest.collection;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "template")
 public class Template {
-	
+	@Id
 	String template_name;
+
 	List<Attribute_Template> attributes;
 	
 	public String getTemplate_name() {

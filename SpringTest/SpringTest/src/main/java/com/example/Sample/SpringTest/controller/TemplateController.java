@@ -66,5 +66,23 @@ public class TemplateController {
 		}
 		return null;
 	}
-	
+
+	@DeleteMapping("/delete/{name}")
+	@ResponseBody
+	public void deleteByName(@PathVariable String name){
+		try {
+			System.out.println("Deleting template: " + name);
+			Template temp = templateService.findByTemplateName(name);
+			if (temp != null) {
+				trepo.delete(temp);
+				System.out.println("Template deleted successfully");
+			} else {
+				System.out.println("Template not found for deletion");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 }
