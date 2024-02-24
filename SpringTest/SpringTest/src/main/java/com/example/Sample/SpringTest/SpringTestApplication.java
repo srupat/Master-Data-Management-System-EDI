@@ -16,6 +16,7 @@ public class SpringTestApplication {
 		SpringApplication.run(SpringTestApplication.class, args);
 	}
 
+<<<<<<< Updated upstream
 	@Bean
 	public WebMvcConfigurer corsConfigurer(){
 		return new WebMvcConfigurer() {
@@ -26,4 +27,8 @@ public class SpringTestApplication {
 			}
 		};
 	}
+=======
+
+
+>>>>>>> Stashed changes
 }
