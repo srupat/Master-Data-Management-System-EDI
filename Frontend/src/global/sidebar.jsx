@@ -1,14 +1,22 @@
-// Sidebar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { GoFoldUp } from "react-icons/go";
+import { MdOutlineAnalytics } from "react-icons/md";
 
 const Sidebar = () => {
   return (
-    <div className="fixed top-0 left-0 h-screen w-64 bg-gray-800 text-white p-6">
+    <div className="fixed top-0 left-0 h-screen w-15 bg-gray-800 text-white p-6">
       {/* Sidebar content */}
-      <Link to="/data-provision" className="flex items-center mb-4 hover:bg-gray-700 transition-colors duration-200 rounded-lg p-2">
-        <p className="font-poppins font-semi-bold">Data Provision</p>
-      </Link>
+      <div className="mb-4"> {/* Increased margin-bottom */}
+        <Link to="/data-provision" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
+          <GoFoldUp size={35} title="Upload CSVs for data provisioning" /> {/* Increase the size of the icon */}
+        </Link>
+      </div>
+      <div className="mb-4"> {/* Increased margin-bottom */}
+        <Link to="/analytics" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
+          <MdOutlineAnalytics size={35} title="Access Analytics Service" /> {/* Increase the size of the icon */}
+        </Link>
+      </div>
       {/* Add similar Link components for other components */}
     </div>
   );

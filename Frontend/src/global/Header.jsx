@@ -20,7 +20,6 @@ const Header = () => {
 
   return (
     <div className="text-center py-5 px-10 shadow-md flex justify-between items-center">
-      <h1 className="text-xl">My App</h1>
       <div className="flex items-center space-x-4">
         
       </div>
