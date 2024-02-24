@@ -1,24 +1,24 @@
-// App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './global/sidebar';
-import Header from './global/Header';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DataProvision from './global/dataProvision/DataProvision';
+import AnalyticsService from './global/analytics/AnalyticsService';
+import Sidebar from './global/sidebar'
+import Header from './global/Header'
 
 const MainPage = () => {
   return (
-    <Router>
-      <div className="flex"> {/* Wrap Sidebar and Dashboard in a flex container */}
+    <BrowserRouter>
+      <div className="flex">
+        <Header />
         <Sidebar />
-        <div className="flex-grow"> {/* Ensure Dashboard occupies remaining space */}
-          <Header />
+        <div className="flex-grow">
           <Routes>
             <Route path="/data-provision" element={<DataProvision />} />
-            <Route path="/" element={<DataProvision />} />
+            <Route path="/analytics" element={<AnalyticsService />} />
           </Routes>
         </div>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };
 
