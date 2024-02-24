@@ -50,10 +50,9 @@ public class TemplateController {
 						
 		}
 		catch(Exception e) {
-			System.out.println("got some exception !! :(");
-			System.err.println(e);
-			return null;
+			e.printStackTrace();
 		}
+		return null;
 		
 	}
 
@@ -72,14 +71,10 @@ public class TemplateController {
 	public void deleteByName(@PathVariable String name){
 		try {
 			System.out.println("Deleting template: " + name);
-			Template temp = templateService.findByTemplateName(name);
-			if (temp != null) {
-				trepo.delete(temp);
-				System.out.println("Template deleted successfully");
-			} else {
-				System.out.println("Template not found for deletion");
+			trepo.delete(templateService.findByTemplateName(name));
+			System.out.println("Template deleted successfully");
 			}
-		} catch (Exception e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
