@@ -39,8 +39,8 @@ public class ObjController {
 
     try {
 
-        String objTemplate = jsonObject.getString("obj_template");
-        String objName = jsonObject.getString("obj_name");
+        String objTemplate = jsonObject.getString("template_name");
+        String objName = jsonObject.getString("object_name");
         JSONArray attributesArray = jsonObject.getJSONArray("attributes");
 
         List<Attribute_Object> attributeList = new ArrayList<>();
@@ -51,8 +51,8 @@ public class ObjController {
         for (int i = 0; i < attributesArray.length(); i++) {
 
             JSONObject attributeObject = attributesArray.getJSONObject(i);
-            String attributeName = attributeObject.getString("name");
-            String attributeValue = attributeObject.getString("val");
+            String attributeName = attributeObject.getString("attribute_name");
+            String attributeValue = attributeObject.getString("attribute_value");
             String attributeType = templateService.getAttributeType(objTemplate, attributeName);
 
             Attribute_Object attribute = obj.createNewObj(attributeName, attributeValue, attributeType);
