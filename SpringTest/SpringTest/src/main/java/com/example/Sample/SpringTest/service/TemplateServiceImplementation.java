@@ -37,7 +37,8 @@ public class TemplateServiceImplementation implements TemplateService {
 	@Override
 	public Template findByTemplateName(String name) {
 		// TODO Auto-generated method stub
-		return templateRepository.findByTemplateName(name);
+		Template temp = templateRepository.findByTemplateName(name);
+		return temp;
 		
 	}
 
