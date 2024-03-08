@@ -7,11 +7,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "template")
 public class Template {
+<<<<<<< HEAD
+=======
 
 	String template_name;
 
 	List<Attribute_Template> attributes;
+>>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
 	
+	@Id
+	private int id;
+	private String template_name;
+	private List<Attribute_Template> attributes;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+		
 	public String getTemplate_name() {
 		return template_name;
 	}
@@ -25,5 +40,13 @@ public class Template {
 		this.attributes = attributes;
 	}
 	
+	public Template attachExpressionToAttribute(String attributeName, String Expression) {
+		for(int i = 0 ; i < attributes.size(); i++) {
+			if(attributes.get(i).getAttribute_name().equals(attributeName)) {
+				attributes.get(i).attachExpression(Expression);
+			}
+		}
+		return this;
+	}
 	
 }

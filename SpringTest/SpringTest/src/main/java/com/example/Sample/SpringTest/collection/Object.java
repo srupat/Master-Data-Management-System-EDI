@@ -38,7 +38,7 @@ public class Object {
                 break;
             case "float":
                 try {
-//                    Attribute_Object obj;
+                	//  Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Float(name, Float.parseFloat(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
@@ -49,6 +49,14 @@ public class Object {
                 try {
 //                    Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Bool(name, Boolean.parseBoolean(val));
+                    addNewObj(obj);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(e);
+                }
+            case "double":
+                try {
+//                    Attribute_Object obj;
+                    obj = new com.example.Sample.SpringTest.collection.Double(name, java.lang.Double.parseDouble(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
@@ -68,9 +76,7 @@ public class Object {
         return obj;
 
     }
-
-
-
+    
     public String getObj_template() {
         return obj_template;
     }
@@ -104,5 +110,12 @@ public class Object {
         this.attributes = attributes;
     }
 
-
+    public String getAttributeValue(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element.getVal();
+    		}
+    	}
+    	return null;
+    }
 }
