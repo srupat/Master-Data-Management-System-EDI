@@ -11,4 +11,6 @@ public interface ObjectRepository extends MongoRepository<com.example.Sample.Spr
 
     @Query(value = "{'obj_name' : ?0}")
     Object findByObjectName(String objName);
+    
+    
 }
