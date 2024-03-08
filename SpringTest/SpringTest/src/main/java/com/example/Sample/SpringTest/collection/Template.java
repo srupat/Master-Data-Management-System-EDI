@@ -7,14 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "template")
 public class Template {
-<<<<<<< HEAD
-=======
 
-	String template_name;
 
-	List<Attribute_Template> attributes;
->>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
-	
 	@Id
 	private int id;
 	private String template_name;

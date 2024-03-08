@@ -7,7 +7,6 @@ import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.service.TemplateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ObjectMapper.JSON_Parsor;
 
@@ -50,17 +49,10 @@ public class TemplateController {
 			return json;						
 		}
 		catch(Exception e) {
-<<<<<<< HEAD
 			System.out.println("got some exception !! :(");
 			System.err.println(e);
 			return null;
 		}		
-=======
-			e.printStackTrace();
-		}
-		return null;
-		
->>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
 	}
 
 	@GetMapping("/templates")
@@ -78,16 +70,10 @@ public class TemplateController {
 	public void deleteByName(@PathVariable String name){
 		try {
 			System.out.println("Deleting template: " + name);
-<<<<<<< HEAD
+
 			Template temp = templateService.findByTemplateName(name);
 			templateService.deleteTemplate(temp);
 		} catch (Exception e) {
-=======
-			trepo.delete(templateService.findByTemplateName(name));
-			System.out.println("Template deleted successfully");
-			}
-		catch (Exception e) {
->>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
 			e.printStackTrace();
 		}
 	}

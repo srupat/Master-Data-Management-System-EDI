@@ -47,14 +47,11 @@ public class ObjController {
         for (int i = 0; i < attributesArray.length(); i++) {
 
             JSONObject attributeObject = attributesArray.getJSONObject(i);
-<<<<<<< HEAD
+
             String attributeName = attributeObject.getString("name");
             String attributeValue;
             String expression = templateService.getAtrributeExpression(objTemplate, attributeName);
-=======
-            String attributeName = attributeObject.getString("attribute_name");
-            String attributeValue = attributeObject.getString("attribute_value");
->>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
+
             String attributeType = templateService.getAttributeType(objTemplate, attributeName);
             
             if(expression != null) {
