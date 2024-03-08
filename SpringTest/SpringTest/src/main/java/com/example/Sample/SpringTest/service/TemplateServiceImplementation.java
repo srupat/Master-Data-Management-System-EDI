@@ -57,4 +57,30 @@ public class TemplateServiceImplementation implements TemplateService {
 		return null;
 	}
 
+	@Override
+	public void deleteTemplate(Template template) {
+		// TODO Auto-generated method stub
+		if (template != null) {
+			templateRepository.delete(template);
+			System.out.println("Template deleted successfully");
+		} else {
+			System.out.println("Template not found for deletion");
+		}
+	}
+
+	@Override
+	public String getAtrributeExpression(String templateName, String attributName) {
+		// TODO Auto-generated method stub
+		Template template = templateRepository.findByTemplateName(templateName);
+		if(template !=null){
+			List<Attribute_Template> attributes = template.getAttributes();
+			for(Attribute_Template attribute : attributes){
+				if( attributName.equals(attribute.getAttribute_name())){
+					return attribute.getExpression();
+				}
+			}
+		}
+		return null;
+	}
+
 }

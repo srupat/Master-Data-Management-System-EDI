@@ -25,6 +25,8 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+<<<<<<< HEAD
+=======
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -39,6 +41,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+>>>>>>> c53f9dc2a1a2f2b3645bc9327bf16b83e66be4ad
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -59,6 +62,11 @@
             <artifactId>android-json</artifactId>
             <version>0.0.20131108.vaadin1</version>
         </dependency>
+        <dependency>
+    		<groupId>net.objecthunter</groupId>
+    		<artifactId>exp4j</artifactId>
+    		<version>0.4.8</version>
+		</dependency>
     </dependencies>
 
 	<build>
