@@ -1,5 +1,6 @@
 package com.example.Sample.SpringTest.collection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ public class Template {
 	private int id;
 	private String template_name;
 	private List<Attribute_Template> attributes;
+	private List<MDM_Expressions> expressionList;
 	
 	public int getId() {
 		return id;
@@ -42,5 +44,28 @@ public class Template {
 		}
 		return this;
 	}
+	public List<MDM_Expressions> getExpressionList() {
+		return expressionList;
+	}
+	public void setExpressionList(List<MDM_Expressions> expressionList) {
+		this.expressionList = expressionList;
+	}
+	
+	public MDM_Expressions findExpressionByName(String name) {
+		for(MDM_Expressions element : expressionList ) {
+			if(element.getName().equals(name)) {
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	public void addTemplateExpression(MDM_Expressions obj) {
+		if(expressionList == null) {
+			expressionList = new  ArrayList<>();
+		}
+		expressionList.add(obj);
+	}
+	
 	
 }

@@ -1,7 +1,6 @@
 package com.example.Sample.SpringTest.repository;
 
 import com.example.Sample.SpringTest.collection.Object;
-import com.example.Sample.SpringTest.collection.Template;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

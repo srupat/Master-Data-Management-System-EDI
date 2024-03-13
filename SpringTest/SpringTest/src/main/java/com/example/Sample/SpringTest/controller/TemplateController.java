@@ -1,8 +1,15 @@
 package com.example.Sample.SpringTest.controller;
 
 import com.example.Sample.SpringTest.repository.TemplateRepository;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.Sample.SpringTest.collection.ArithmeticExpression;
+import com.example.Sample.SpringTest.collection.ConditionalExpression;
+import com.example.Sample.SpringTest.collection.MDM_Expressions;
 import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.service.TemplateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +22,6 @@ import java.util.Optional;
 
 
 @RestController
-//@RequestMapping("/template")
 public class TemplateController {
 
 	@Autowired
@@ -78,13 +84,13 @@ public class TemplateController {
 		}
 	}
 	
-	@PutMapping("/template/attach_expression/{templateName}/{attributeName}/{Expression}")
-	public void attachExpressionToTemplateAttribute(@PathVariable String templateName, @PathVariable String attributeName, @PathVariable String Expression) throws JsonMappingException, JsonProcessingException {	
+	@PutMapping("/template/attachAttributeExpression/{templateName}/{attributeName}/{expression}")
+	public void attachExpressionToTemplateAttribute(@PathVariable String templateName, @PathVariable String attributeName, @PathVariable String expression) throws JsonMappingException, JsonProcessingException {	
 		Optional<Template> optionalTemplate = Optional.of(templateService.findByTemplateName(templateName));
 		System.out.println("Attaching the expression to the template...");
 		if(optionalTemplate.isPresent()) {
 			Template template = optionalTemplate.get();			
-			template.attachExpressionToAttribute(attributeName, Expression);
+			template.attachExpressionToAttribute(attributeName, expression);
 			deleteByName(templateName);
 			templateService.save(template);
 		}else {
@@ -92,4 +98,29 @@ public class TemplateController {
 		}
 		System.out.println("Expression attached ");
 	}
+	@PutMapping("/template/attachTemplateExpression/{templateName}")
+	public void attachExpressionToTemplate(@RequestBody String json, @PathVariable String templateName) throws JSONException {
+		JSONObject jsonObj = new JSONObject(json);
+		Template template = templateService.findByTemplateName(templateName);
+		String type = jsonObj.getString("type");
+		MDM_Expressions obj;
+		switch(type) {
+		case "Arithmetic" :
+			 obj = new ArithmeticExpression(jsonObj.getString("name"), jsonObj.getString("expressionString"));
+			break;
+		case "Conditional" :
+			obj = new ConditionalExpression(jsonObj.getString("name"), jsonObj.getString("expressionString"), jsonObj.getString("dataType"));
+			break;
+			default:
+				obj = new ArithmeticExpression(null,null);
+				System.out.println("Something went wrong ...inside the default case");
+				return;
+		}
+		
+		template.addTemplateExpression(obj);					
+		deleteByName(templateName);
+		templateService.save(template);
+		System.out.println("A new expression is added to the template......");
+	}
+	
 }
