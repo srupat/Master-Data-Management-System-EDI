@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public abstract class Attribute_Object {
     protected String name;
     // will need to add the val according to data type
-
+    
     @JsonCreator
     public Attribute_Object(@JsonProperty("name") String name){
         this.name = name;
@@ -13,9 +13,10 @@ public abstract class Attribute_Object {
     
     public String getName() {
     	return this.name;
-    }
-    
+    }  
     public abstract String getVal();
+    public abstract String getType();
+    public abstract Bool compare(String operation, Attribute_Object obj);
 }
 
 class Int extends Attribute_Object{
@@ -25,10 +26,39 @@ class Int extends Attribute_Object{
         super(name);
         this.val = val;
     }
+    
 	@Override
 	public String getVal() {
 		// TODO Auto-generated method stub
 		return String.valueOf(val);
+	}
+	
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "int";
+	}
+
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == Integer.parseInt(obj.getVal());
+		case ">":
+			result = this.val > Integer.parseInt(obj.getVal());
+		case "<":
+			result = this.val < Integer.parseInt(obj.getVal());
+		case "<=":
+			result = this.val <= Integer.parseInt(obj.getVal());
+		case ">=":
+			result = this.val >= Integer.parseInt(obj.getVal());
+		case "!=":
+			result = this.val != Integer.parseInt(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
 	}
 }
 
@@ -44,6 +74,32 @@ class Float extends Attribute_Object{
 		// TODO Auto-generated method stub
 		return String.valueOf(val);
 	}
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "float";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == java.lang.Float.parseFloat(obj.getVal());
+		case ">":
+			result = this.val > java.lang.Float.parseFloat(obj.getVal());
+		case "<":
+			result = this.val < java.lang.Float.parseFloat(obj.getVal());
+		case "<=":
+			result = this.val <= java.lang.Float.parseFloat(obj.getVal());
+		case ">=":
+			result = this.val >= java.lang.Float.parseFloat(obj.getVal());
+		case "!=":
+			result = this.val != java.lang.Float.parseFloat(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
+	}
 }
 
 class Strings extends Attribute_Object{
@@ -57,6 +113,22 @@ class Strings extends Attribute_Object{
 	public String getVal() {
 		// TODO Auto-generated method stub
 		return val;
+	}
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "String";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val.equals(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
 	}
 }
 
@@ -72,6 +144,17 @@ class Bool extends Attribute_Object{
 		// TODO Auto-generated method stub
 		return String.valueOf(val);
 	}
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "bool";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		//nothing thought to be done here
+		return null;
+	}
 }
 
 class Double extends Attribute_Object{
@@ -85,6 +168,32 @@ class Double extends Attribute_Object{
 	public String getVal() {
 		// TODO Auto-generated method stub
 		return String.valueOf(val);
+	}
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "boolean";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == java.lang.Double.parseDouble(obj.getVal());
+		case ">":
+			result = this.val > java.lang.Double.parseDouble(obj.getVal());
+		case "<":
+			result = this.val < java.lang.Double.parseDouble(obj.getVal());
+		case "<=":
+			result = this.val <= java.lang.Double.parseDouble(obj.getVal());
+		case ">=":
+			result = this.val >= java.lang.Double.parseDouble(obj.getVal());
+		case "!=":
+			result = this.val != java.lang.Double.parseDouble(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
 	}
 }
 
@@ -102,6 +211,19 @@ class ObjType extends Attribute_Object{
 	public String getVal() {
 		// TODO Auto-generated method stub
 		return obj.toString();
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "Template";
+	}
+
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		// TODO Auto-generated method stub
+		//complex object comparison not supported
+		return null;
 	}
 }
 

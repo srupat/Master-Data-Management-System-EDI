@@ -5,9 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.lang.Float;
 import java.util.List;
 
-import java.lang.*;
-
-
 @Document(collection = "object")
 public class Object {
     String obj_template;
@@ -114,6 +111,24 @@ public class Object {
     	for(Attribute_Object element : attributes) {
     		if(element.getName().equals(attributeName)) {
     			return element.getVal();
+    		}
+    	}
+    	return null;
+    }
+    
+    public String getAttributeType(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element.getVal();
+    		}
+    	}
+    	return null;
+    }
+    
+    public Attribute_Object getAttributeObject(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element;
     		}
     	}
     	return null;

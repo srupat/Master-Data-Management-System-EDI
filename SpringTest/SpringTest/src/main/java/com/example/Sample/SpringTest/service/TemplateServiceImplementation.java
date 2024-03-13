@@ -2,6 +2,8 @@ package com.example.Sample.SpringTest.service;
 import java.util.List;
 
 import com.example.Sample.SpringTest.collection.Attribute_Template;
+import com.example.Sample.SpringTest.collection.MDM_Expressions;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -77,6 +79,21 @@ public class TemplateServiceImplementation implements TemplateService {
 			for(Attribute_Template attribute : attributes){
 				if( attributName.equals(attribute.getAttribute_name())){
 					return attribute.getExpression();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public MDM_Expressions findExpressionByName(String name, String templateName) {
+		// TODO Auto-generated method stub
+		Template template = templateRepository.findByTemplateName(templateName);
+		List<MDM_Expressions> expressionList = template.getExpressionList();
+		if(template !=null){
+			for(MDM_Expressions expression : expressionList ){
+				if( expression.getName().equals(name)){
+					return expression;
 				}
 			}
 		}
