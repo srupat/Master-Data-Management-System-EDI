@@ -6,13 +6,13 @@ public class ConditionalExpression extends MDM_Expressions {
 	
 	public ConditionalExpression(String name, String expressionString, String dataType) {
 		super(name, expressionString);
-		// TODO Auto-generated constructor stub
+		
 		this.dataType = dataType;
 	}
 	
 	@Override
 	public String evaluate() {
-		// TODO Auto-generated method stub
+		
 		//identify the operands and the operator and convert them into attribute_type objects and then call the evaluate method
 		System.out.println("evaluating the expression " + expressionString);
 		String[] words = expressionString.split("\\s+");

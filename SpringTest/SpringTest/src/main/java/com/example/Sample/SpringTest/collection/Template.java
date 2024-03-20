@@ -1,8 +1,10 @@
 package com.example.Sample.SpringTest.collection;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.codecs.pojo.annotations.BsonId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,15 +13,15 @@ public class Template {
 
 
 	@Id
-	private int id;
+	private BigInteger id;
 	private String template_name;
 	private List<Attribute_Template> attributes;
 	private List<MDM_Expressions> expressionList;
 	
-	public int getId() {
+	public BigInteger getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(BigInteger id) {
 		this.id = id;
 	}
 		

@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ObjectMapper.JSON_Parsor;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class TemplateController {
 	public Template save(@RequestBody Template temp) {
 		System.out.println("post mapping method called");
 		try{
-			temp.setId(templateCount);
+			temp.setId(BigInteger.valueOf(templateCount));
 			templateCount++;
 			templateService.save(temp);
 		}
@@ -71,7 +72,7 @@ public class TemplateController {
 		return null;
 	}
 
-	@DeleteMapping("/delete/{name}")
+	@DeleteMapping("/delete/template/{name}")
 	@ResponseBody
 	public void deleteByName(@PathVariable String name){
 		try {

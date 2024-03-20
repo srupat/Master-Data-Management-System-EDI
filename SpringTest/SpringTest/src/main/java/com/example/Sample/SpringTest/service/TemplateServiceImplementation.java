@@ -22,7 +22,7 @@ public class TemplateServiceImplementation implements TemplateService {
 	
 	@Override
 	public String save(Template template) {
-		// TODO Auto-generated method stub
+		
 		
 		templateRepository.save(template);
 		return "";//getPersonId method is missing ???
@@ -31,14 +31,14 @@ public class TemplateServiceImplementation implements TemplateService {
 
 	@Override
 	public List<Template> getAllTemplates() {
-		// TODO Auto-generated method stub
+		
 		return templateRepository.findAll();
 		
 	}
 
 	@Override
 	public Template findByTemplateName(String name) {
-		// TODO Auto-generated method stub
+		
 		Template temp = templateRepository.findByTemplateName(name);
 		return temp;
 		
@@ -61,7 +61,7 @@ public class TemplateServiceImplementation implements TemplateService {
 
 	@Override
 	public void deleteTemplate(Template template) {
-		// TODO Auto-generated method stub
+		
 		if (template != null) {
 			templateRepository.delete(template);
 			System.out.println("Template deleted successfully");
@@ -72,7 +72,7 @@ public class TemplateServiceImplementation implements TemplateService {
 
 	@Override
 	public String getAtrributeExpression(String templateName, String attributName) {
-		// TODO Auto-generated method stub
+		
 		Template template = templateRepository.findByTemplateName(templateName);
 		if(template !=null){
 			List<Attribute_Template> attributes = template.getAttributes();
@@ -87,7 +87,7 @@ public class TemplateServiceImplementation implements TemplateService {
 
 	@Override
 	public MDM_Expressions findExpressionByName(String name, String templateName) {
-		// TODO Auto-generated method stub
+		
 		Template template = templateRepository.findByTemplateName(templateName);
 		List<MDM_Expressions> expressionList = template.getExpressionList();
 		if(template !=null){
