@@ -9,4 +9,6 @@ public interface ObjectService {
     Object findByObjName(String ObjName);
     
     List<Object> getAllObjectsForTemplate(String templateName);
+
+    void deleteObject(Object o);
 }

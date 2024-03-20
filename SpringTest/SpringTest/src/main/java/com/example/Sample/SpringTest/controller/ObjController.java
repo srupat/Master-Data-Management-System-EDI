@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ObjectMapper.JSON_Parsor;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class ObjController {
     
     @Autowired
     private ObjectService oservice;
+
+    private int objCount = 0;
     
     @PostMapping("/create/object")
     public Object submitObject(@RequestBody String json) throws JSONException {
@@ -60,6 +64,8 @@ public class ObjController {
             System.out.println("Execution until i = " + i);
         }
         System.out.println(attributeList);
+        obj.setId(BigInteger.valueOf(objCount));
+        objCount ++;
         orepo.save(obj);
     }
     catch(Exception e){
@@ -108,4 +114,19 @@ public class ObjController {
     	}	
     	return null;
     }
+
+    @DeleteMapping("/delete/object/{name}")
+    @ResponseBody
+    public void deleteByName(@PathVariable String name){
+        try {
+            System.out.println("Deleting object: " + name);
+
+            Object obj = oservice.findByObjName(name);
+            oservice.deleteObject(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

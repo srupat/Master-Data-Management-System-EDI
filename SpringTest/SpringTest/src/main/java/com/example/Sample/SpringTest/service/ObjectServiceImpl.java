@@ -1,6 +1,7 @@
 package com.example.Sample.SpringTest.service;
 
 import com.example.Sample.SpringTest.collection.Object;
+import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.repository.ObjectRepository;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class ObjectServiceImpl implements ObjectService{
     }
 	@Override
 	public List<Object> getAllObjectsForTemplate(String templateName) {
-		// TODO Auto-generated method stub
+		
 		List<Object> objects = orepo.findAll();
 		List<Object> resultList = new ArrayList<>();
 		for(Object object : objects) {
@@ -31,5 +32,16 @@ public class ObjectServiceImpl implements ObjectService{
 			}
 		}
 		return resultList;
+	}
+
+	@Override
+	public void deleteObject(Object obj) {
+
+		if (obj != null) {
+			orepo.delete(obj);
+			System.out.println("Object deleted successfully");
+		} else {
+			System.out.println("Object not found for deletion");
+		}
 	}
 }

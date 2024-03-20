@@ -1,12 +1,26 @@
 package com.example.Sample.SpringTest.collection;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.Float;
+import java.math.BigInteger;
 import java.util.List;
 
 @Document(collection = "object")
 public class Object {
+
+    @Id
+    private BigInteger id;
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
     String obj_template;
     String obj_name;
     List<Attribute_Object> attributes;
