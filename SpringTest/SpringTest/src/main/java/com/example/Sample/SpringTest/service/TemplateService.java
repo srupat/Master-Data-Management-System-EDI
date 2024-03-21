@@ -20,5 +20,7 @@ public interface TemplateService {
 	String getAtrributeExpression(String templateName, String attributeName);
 	
 	MDM_Expressions findExpressionByName(String name, String templateName);
+
+	List<Template> search(String search_query);
 	
 }

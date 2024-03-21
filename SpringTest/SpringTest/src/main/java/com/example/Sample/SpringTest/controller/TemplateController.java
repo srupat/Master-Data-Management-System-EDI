@@ -123,5 +123,11 @@ public class TemplateController {
 		templateService.save(template);
 		System.out.println("A new expression is added to the template......");
 	}
+
+	@GetMapping("/templates/{text}")
+	public List<Template> search(@PathVariable String text){
+		System.out.println("Searching for template with name " + text);
+		return templateService.search(text);
+	}
 	
 }

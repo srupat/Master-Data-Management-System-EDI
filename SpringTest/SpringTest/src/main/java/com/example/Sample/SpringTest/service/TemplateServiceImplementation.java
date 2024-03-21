@@ -1,15 +1,26 @@
 package com.example.Sample.SpringTest.service;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.example.Sample.SpringTest.collection.Attribute_Template;
 import com.example.Sample.SpringTest.collection.MDM_Expressions;
 
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.repository.TemplateRepository;
+
+
 
 
 @Service
@@ -18,7 +29,11 @@ public class TemplateServiceImplementation implements TemplateService {
 	@Autowired
 	private TemplateRepository templateRepository;
 
+	@Autowired
+	MongoClient client;
 
+	@Autowired
+	MongoConverter converter;
 	
 	@Override
 	public String save(Template template) {
@@ -96,6 +111,29 @@ public class TemplateServiceImplementation implements TemplateService {
 					return expression;
 				}
 			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<Template> search(String search_query){
+		List<Template> templates = new ArrayList<>();
+
+		try {
+			MongoDatabase database = client.getDatabase("DataBase1");
+			MongoCollection<Document> collection = database.getCollection("template");
+			AggregateIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$search",
+					new Document("index", "tempIndex")
+					.append("text",
+					new Document("query", search_query)
+					.append("path", "template_name")))));
+
+
+			result.forEach(doc -> templates.add(converter.read(Template.class, doc)));
+			return templates;
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
 		}
 		return null;
 	}

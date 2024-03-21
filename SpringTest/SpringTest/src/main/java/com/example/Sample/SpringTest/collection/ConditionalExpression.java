@@ -9,7 +9,8 @@ public class ConditionalExpression extends MDM_Expressions {
 		
 		this.dataType = dataType;
 	}
-	
+
+	// Object
 	@Override
 	public String evaluate() {
 		
