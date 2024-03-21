@@ -4,6 +4,7 @@ import DataProvision from './global/dataProvision/DataProvision';
 import AnalyticsService from './global/analytics/AnalyticsService';
 import Sidebar from './global/sidebar'
 import Header from './global/Header'
+import ExpressionEval from './global/expressionEval/ExpressionEval';
 
 const MainPage = () => {
   return (
@@ -15,6 +16,7 @@ const MainPage = () => {
           <Routes>
             <Route path="/data-provision" element={<DataProvision />} />
             <Route path="/analytics" element={<AnalyticsService />} />
+            <Route path="/expression-eval" element={<ExpressionEval />} />
           </Routes>
         </div>
       </div>

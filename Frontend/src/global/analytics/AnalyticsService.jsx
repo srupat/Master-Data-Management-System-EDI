@@ -1,71 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import Draggable from 'react-draggable';
+import React, { useState } from 'react';
 
 const AnalyticsService = () => {
-
-
-  // State to manage the visibility of each panel's content
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    const storedState = sessionStorage.getItem('collapsedPanels');
-    return storedState ? JSON.parse(storedState) : {
-      templates: false,
-      methods: false,
-    };
-  });
-
-  // Update sessionStorage when state changes
-  useEffect(() => {
-    sessionStorage.setItem('collapsedPanels', JSON.stringify(isCollapsed));
-  }, [isCollapsed]);
-
-  const toggleCollapse = (panelKey) => {
-    setIsCollapsed(prevState => ({
-      ...prevState,
-      [panelKey]: !prevState[panelKey],
-    }));
+  // State to manage selected template, method, and template methods mapping
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState('');
+  
+  // Template methods mapping
+  const templateMethods = {
+    'Template 1': ['Method 1', 'Method 2'],
+    'Template 2': ['Method 3', 'Method 4']
+    // Add more templates and their methods as needed
   };
 
-  const fetchData = async () => {
-    // Implement your fetchData logic here
+  // Function to handle template selection
+  const handleTemplateChange = (template) => {
+    setSelectedTemplate(template);
+    // Clear selected method when template changes
+    setSelectedMethod('');
   };
 
-  const submitData = async (data) => {
-    // Implement your submitData logic here
+  // Function to handle method selection
+  const handleMethodChange = (method) => {
+    setSelectedMethod(method);
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Draggable defaultPosition={{x:   0, y:   0}}>
-        <div className={`bg-white p-4 rounded-md shadow-md relative ${isCollapsed.templates ? 'h-16' : 'h-auto'} w-full md:w-1/2 lg:w-2/4`}>
-          <h3 className="text-lg font-medium mb-2">Templates</h3>
-          {!isCollapsed.templates && (
-            <>
-              <p>This is the content of Panel  1</p>
-              <button onClick={fetchData} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Fetch Data</button>
-              <button onClick={() => submitData({ /* Your data here */ })} className="bg-green-500 text-white px-4 py-2 rounded-md mt-4">Submit Data</button>
-            </>
-          )}
-          <button onClick={() => toggleCollapse('templates')} className="bg-gray-200 text-black px-4 py-2 rounded-md mt-4 absolute top-0 right-0 mt-2 mr-2">
-            {isCollapsed.templates ? 'Expand' : 'Collapse'}
-          </button>
+    <div className="analytics-service flex h-screen">
+      <div className="sidebar w-1/4 bg-gray-200 p-4 flex flex-col">
+        <div className="templates mb-4">
+          <h2 className="text-lg font-semibold mb-2">Templates</h2>
+          <ul>
+            <li>
+              <input
+                type="radio"
+                id="template1"
+                value="Template 1"
+                checked={selectedTemplate === 'Template 1'}
+                onChange={() => handleTemplateChange('Template 1')}
+                className="mr-2"
+              />
+              <label htmlFor="template1">Template 1</label>
+            </li>
+            <li>
+              <input
+                type="radio"
+                id="template2"
+                value="Template 2"
+                checked={selectedTemplate === 'Template 2'}
+                onChange={() => handleTemplateChange('Template 2')}
+                className="mr-2"
+              />
+              <label htmlFor="template2">Template 2</label>
+            </li>
+          </ul>
         </div>
-      </Draggable>
-      <Draggable defaultPosition={{x:   100, y:   100}}>
-        <div className={`bg-white p-4 rounded-md shadow-md relative ${isCollapsed.methods ? 'h-16' : 'h-auto'} w-full md:w-1/2 lg:w-2/4`}>
-          <h3 className="text-lg font-medium mb-2">Methods</h3>
-          {!isCollapsed.methods && (
-            <>
-              <p>This is the content of Panel  2</p>
-              <button onClick={fetchData} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Fetch Data</button>
-              <button onClick={() => submitData({ /* Your data here */ })} className="bg-green-500 text-white px-4 py-2 rounded-md mt-4">Submit Data</button>
-            </>
-          )}
-          <button onClick={() => toggleCollapse('methods')} className="bg-gray-200 text-black px-4 py-2 rounded-md mt-4 absolute top-0 right-0 mt-2 mr-2">
-            {isCollapsed.methods ? 'Expand' : 'Collapse'}
-          </button>
+        <div className="methods">
+          <h2 className="text-lg font-semibold mb-2">Methods</h2>
+          <ul>
+            {/* Render methods only if a template is selected */}
+            {selectedTemplate &&
+              templateMethods[selectedTemplate].map((method) => (
+                <li key={method}>
+                  <input
+                    type="radio"
+                    id={method}
+                    value={method}
+                    checked={selectedMethod === method}
+                    onChange={() => handleMethodChange(method)}
+                    className="mr-2"
+                  />
+                  <label htmlFor={method}>{method}</label>
+                </li>
+              ))}
+          </ul>
         </div>
-      </Draggable>
-      {/* Add more draggable panels as needed */}
+      </div>
+      {/* Main content can be added here */}
     </div>
   );
 };

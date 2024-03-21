@@ -93,9 +93,9 @@ const DataProvision = () => {
             <div className="w-64"> {/* Sidebar */}
                 {/* Add your sidebar content here */}
             </div>
-            <div className="flex-grow p-6"> {/* Content */}
+            <div className="flex-grow p-6 "> {/* Content */}
                 {/* Container for buttons */}
-                <div className="flex items-center justify-start space-x-4 ml-4">
+                <div className="flex items-center justify-start space-x-2 ml-4">
                     <button
                         className="btn bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md cursor-pointer"
                         onClick={sendTemplateJSONToBackend}
