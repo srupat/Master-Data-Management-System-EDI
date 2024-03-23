@@ -86,8 +86,6 @@ const DataProvision = () => {
         setDisplayTemplateJSON(true);
     };
 
-
-
     return (
         <div className="flex">
             <div className="w-64"> {/* Sidebar */}

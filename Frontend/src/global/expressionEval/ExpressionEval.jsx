@@ -1,32 +1,70 @@
 import React, { useState } from 'react';
+import JSONTree from 'react-json-view';
 
 const ExpressionEval = () => {
+
+  const jsonData = [
+    {
+      "template_name": "baradaf",
+      "a": [
+          "Month",
+          "Unitsales",
+          "Price"
+      ]
+    },
+    {
+      "template_name": "yalamiha",
+      "a": [
+          "Month",
+          "Unitsales",
+          "Price"
+      ]
+    }
+  ];
+
+
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
   const [templateViews, setTemplateViews] = useState({});
+  const [selectedJsonData, setSelectedJsonData] = useState(null);
 
-  // Function to handle checkbox change
-  const handleCheckboxChange = (template) => {
-    let updatedSelectedTemplates;
-    if (selectedTemplates.includes(template)) {
-      updatedSelectedTemplates = selectedTemplates.filter((t) => t !== template);
+  const handleEdit = (edit) => {
+    let attributeName;
+    if (selectedJsonData && selectedJsonData.a) {
+         if (edit.namespace) {
+             // Assuming edit.namespace is an array representing the path to the edited attribute
+             // Join the namespace array with '.' to form a path string
+             attributeName = edit.namespace.join('.') + '.' + selectedJsonData.a[edit.name];
+         } else {
+             // If there's no namespace, the attribute is directly under the template
+             attributeName = selectedJsonData.a[edit.name];
+         }
     } else {
-      updatedSelectedTemplates = [...selectedTemplates, template];
+         // Handle the case where selectedJsonData or selectedJsonData.a is undefined
+         console.error("JSON data or 'a' property is undefined.");
+         return;
     }
-    setSelectedTemplates(updatedSelectedTemplates);
+   
+    // Construct the path based on the template name and the attribute name
+    // This assumes that the attribute is directly under the template and not nested further
+    const path = `${selectedJsonData.template_name}.${attributeName}`;
+    setTextBoxValue(textBoxValue + path);
+};
 
-    // Generate random tree elements for the selected template
-    if (!updatedSelectedTemplates.includes(template)) return; // If template is unchecked, no need to generate tree elements
 
-    // Generate some random tree elements
-    const randomTreeElements = generateRandomTreeElements();
+const handleCheckboxChange = (template, index) => {
+  let updatedSelectedTemplates;
+  if (selectedTemplates.includes(template)) {
+    updatedSelectedTemplates = selectedTemplates.filter((t) => t !== template);
+  } else {
+    updatedSelectedTemplates = [...selectedTemplates, template];
+  }
+  setSelectedTemplates(updatedSelectedTemplates);
 
-    // Set the random tree elements for the selected template
-    setTemplateViews((prevTemplateViews) => ({
-      ...prevTemplateViews,
-      [template]: randomTreeElements,
-    }));
-  };
+  // Set the selected JSON data for the template
+  setSelectedJsonData(jsonData[index]);
+};
+
 
   // Function to generate random tree elements
   const generateRandomTreeElements = () => {
@@ -56,46 +94,40 @@ const ExpressionEval = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar with list of templates */}
       <div className="flex-none w-1/6 bg-gray-100 p-4 border-r border-gray-200">
         <h2 className="text-lg font-semibold mb-4">Templates</h2>
         <ul>
-          <li className="mb-2">
-            <label className="flex items-center">
-              <input type="checkbox" onChange={() => handleCheckboxChange('Template 1')} className="mr-2" />
-              Template 1
-            </label>
-          </li>
-          <li className="mb-2">
-            <label className="flex items-center">
-              <input type="checkbox" onChange={() => handleCheckboxChange('Template 2')} className="mr-2" />
-              Template 2
-            </label>
-          </li>
-          {/* Add more templates as needed */}
+          {jsonData.map((data, index) => (
+            <li key={index} className="mb-2">
+              <label className="flex items-center">
+                <input type="checkbox" onChange={() => handleCheckboxChange(data.template_name, index)} className="mr-2" />
+                {data.template_name}
+              </label>
+            </li>
+          ))}
         </ul>
       </div>
 
-      {/* Flex container for generated flexbox and permanent flexbox */}
       <div className="flex-1 flex flex-col">
-        {/* Generated flexbox based on selected templates */}
         <div className="bg-gray-200 p-4 overflow-auto h-3/4">
           <h2 className="text-lg font-semibold mb-4">Template Views</h2>
           <div className="flex flex-wrap gap-4">
-            {/* Display selected templates with random tree elements */}
             {selectedTemplates.map((template) => (
               <div key={template} className="p-4 bg-white border border-gray-300 rounded">
                 <h3 className="text-lg font-semibold mb-2">{template}</h3>
                 <div>
-                  {/* Display random tree elements */}
-                  {templateViews[template] && templateViews[template]}
+                 {/* Use selectedJsonData to render the JSONTree component */}
+                 <JSONTree
+                    src={selectedJsonData}
+                    onEdit={handleEdit}
+                    readOnly // Prevents editing of textbox
+                 />
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Permanent flexbox */}
         <div className="bg-white p-4 h-2/3 flex flex-col">
           <h2 className="text-lg font-semibold mb-4">Expression Creation</h2>
           <input
@@ -107,23 +139,35 @@ const ExpressionEval = () => {
           />
 
           <div className="flex justify-start">
-            {/* Buttons for arithmetic operators */}
+          {/* Arithmetic operators */}
             <button onClick={() => appendToTextBox('+')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+</button>
             <button onClick={() => appendToTextBox('-')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">-</button>
             <button onClick={() => appendToTextBox('*')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">x</button>
             <button onClick={() => appendToTextBox('/')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">÷</button>
             <button onClick={() => appendToTextBox('%')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">%</button>
-            {/* Buttons for brackets */}
+
+            {/* Logical operators */}
+            <button onClick={() => appendToTextBox('&')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">&</button>
+            <button onClick={() => appendToTextBox('|')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">|</button>
+
+            {/* Comparison operators */}
+            <button onClick={() => appendToTextBox('==')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">==</button>
+            <button onClick={() => appendToTextBox('!=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">!=</button>
+            <button onClick={() => appendToTextBox('<')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<'}</button>
+            <button onClick={() => appendToTextBox('>')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>'}</button>
+            <button onClick={() => appendToTextBox('<=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<='}</button>
+            <button onClick={() => appendToTextBox('>=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>='}</button>
+
+            {/* Brackets */}
             <button onClick={() => appendToTextBox('(')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4"> ( </button>
             <button onClick={() => appendToTextBox(')')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"> ) </button>
+          
           </div>
-
-          {/* Submit button */}
           <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded">Submit</button>
         </div>
       </div>
     </div>
-  );
+ );
 };
 
 export default ExpressionEval;
