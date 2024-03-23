@@ -127,6 +127,30 @@ public class ObjController {
             e.printStackTrace();
         }
     }
+
+    @PutMapping("/object/{oldName}/{newName}")
+    public void updateObjName(@PathVariable String oldName, @PathVariable String newName){
+        try{
+            oservice.updateObjectName(oldName, newName);
+            return;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error"+ e);
+        }
+    }
+
+    @PutMapping("/object/template/{oldName}/{newName}")
+    public void updateObjTemplateName(@PathVariable String oldName, @PathVariable String newName){
+        try{
+            templateService.updateTemplateName(oldName, newName);
+            return;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error"+ e);
+        }
+    }
 }
 
 

@@ -12,5 +12,6 @@ public interface ObjectService {
 
     void deleteObject(Object o);
 
-
+    Long updateObjectName(String oldName, String newName);
+    Long updateObjectTemplateName(String oldName, String newName);
 }

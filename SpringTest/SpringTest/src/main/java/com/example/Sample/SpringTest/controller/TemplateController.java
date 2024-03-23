@@ -139,7 +139,7 @@ public class TemplateController {
 		return templateService.search(text);
 	}
 
-	@PutMapping("/update/template/{oldName}/{newName}")
+	@PutMapping("/template/{oldName}/{newName}")
 	public void updateName(@PathVariable String oldName, @PathVariable String newName){
 		try{
 			templateService.updateTemplateName(oldName, newName);
@@ -151,7 +151,7 @@ public class TemplateController {
 		}
 	}
 
-	@PutMapping("/update/attributes/{tempName}/{oldAttributeName}/{newAttributeName}/{newAttributeType}")
+	@PutMapping("/attributes/{tempName}/{oldAttributeName}/{newAttributeName}/{newAttributeType}")
 	public void updateName(@PathVariable String tempName,@PathVariable String oldAttributeName, @PathVariable String newAttributeName, @PathVariable String newAttributeType){
 		try{
 			templateService.updateAttributes(tempName,oldAttributeName, newAttributeName, newAttributeType);
