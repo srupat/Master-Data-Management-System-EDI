@@ -10,14 +10,18 @@ const ExpressionEval = () => {
           "Month",
           "Unitsales",
           "Price"
+      ],
+      "e": [
+        "husn",
+        "Unitsales",
+        "Price"
       ]
     },
+    
     {
       "template_name": "yalamiha",
-      "a": [
-          "Month",
-          "Unitsales",
-          "Price"
+      "e": [
+          "Khaalid",
       ]
     }
   ];
@@ -112,19 +116,23 @@ const handleCheckboxChange = (template, index) => {
         <div className="bg-gray-200 p-4 overflow-auto h-3/4">
           <h2 className="text-lg font-semibold mb-4">Template Views</h2>
           <div className="flex flex-wrap gap-4">
-            {selectedTemplates.map((template) => (
-              <div key={template} className="p-4 bg-white border border-gray-300 rounded">
-                <h3 className="text-lg font-semibold mb-2">{template}</h3>
-                <div>
-                 {/* Use selectedJsonData to render the JSONTree component */}
-                 <JSONTree
-                    src={selectedJsonData}
-                    onEdit={handleEdit}
-                    readOnly // Prevents editing of textbox
-                 />
+            {selectedTemplates.map((template, index) => {
+              // Find the corresponding JSON data for the selected template
+              const templateData = jsonData.find(data => data.template_name === template);
+              return (
+                <div key={index} className="p-4 bg-white border border-gray-300 rounded">
+                 <h3 className="text-lg font-semibold mb-2">{template}</h3>
+                 <div>
+                    {/* Render the JSONTree component with the data for the selected template */}
+                    <JSONTree
+                      src={templateData}
+                      onEdit={handleEdit}
+                      readOnly // Prevents editing of textbox
+                    />
+                 </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
