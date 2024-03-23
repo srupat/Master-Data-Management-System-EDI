@@ -10,17 +10,21 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.example.Sample.SpringTest.collection.Template;
 import com.example.Sample.SpringTest.repository.TemplateRepository;
-
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Service
@@ -34,6 +38,9 @@ public class TemplateServiceImplementation implements TemplateService {
 
 	@Autowired
 	MongoConverter converter;
+
+	@Autowired
+	MongoTemplate mongoTemplate;
 	
 	@Override
 	public String save(Template template) {
@@ -137,5 +144,31 @@ public class TemplateServiceImplementation implements TemplateService {
 		}
 		return null;
 	}
+
+	@Override
+	public Long updateTemplateName(String oldName, String newName){
+		Query query = new Query().addCriteria(Criteria.where("template_name").is(oldName));
+		Update update = new Update().set("template_name", newName);
+
+		UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Template.class);
+		return updateResult.getModifiedCount();
+	}
+
+    @Override
+    public Long updateAttributes(String tempName, String oldAttributeName, String newAttributeName, String newAttributeType) {
+        Query query = new Query().addCriteria(
+                Criteria.where("template_name").is(tempName)
+                        .and("attributes.attribute_name").is(oldAttributeName)
+        );
+
+        Update update = new Update()
+                .set("attributes.$.attribute_name", newAttributeName)
+                .set("attributes.$.attribute_type", newAttributeType);
+
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Template.class);
+        return updateResult.getModifiedCount();
+    }
+
+
 
 }

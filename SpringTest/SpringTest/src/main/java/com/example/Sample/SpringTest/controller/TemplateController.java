@@ -2,9 +2,15 @@ package com.example.Sample.SpringTest.controller;
 
 import com.example.Sample.SpringTest.repository.TemplateRepository;
 
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.internal.bulk.UpdateRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.Sample.SpringTest.collection.ArithmeticExpression;
@@ -30,6 +36,9 @@ public class TemplateController {
 	@Autowired
 	private TemplateRepository trepo;	
 	private int templateCount = 0;
+
+	@Autowired
+	MongoTemplate mongoTemplate;
 	
 	@PostMapping("/create/template")
 	public Template save(@RequestBody Template temp) {
@@ -128,6 +137,30 @@ public class TemplateController {
 	public List<Template> search(@PathVariable String text){
 		System.out.println("Searching for template with name " + text);
 		return templateService.search(text);
+	}
+
+	@PutMapping("/update/template/{oldName}/{newName}")
+	public void updateName(@PathVariable String oldName, @PathVariable String newName){
+		try{
+			templateService.updateTemplateName(oldName, newName);
+			return;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error"+ e);
+		}
+	}
+
+	@PutMapping("/update/attributes/{tempName}/{oldAttributeName}/{newAttributeName}/{newAttributeType}")
+	public void updateName(@PathVariable String tempName,@PathVariable String oldAttributeName, @PathVariable String newAttributeName, @PathVariable String newAttributeType){
+		try{
+			templateService.updateAttributes(tempName,oldAttributeName, newAttributeName, newAttributeType);
+			return;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error"+ e);
+		}
 	}
 	
 }

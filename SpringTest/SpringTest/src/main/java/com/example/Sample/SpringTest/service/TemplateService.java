@@ -22,5 +22,9 @@ public interface TemplateService {
 	MDM_Expressions findExpressionByName(String name, String templateName);
 
 	List<Template> search(String search_query);
+
+	Long updateTemplateName(String oldName, String newName);
+
+	Long updateAttributes(String tempName,String oldAttributeName, String newAttributeName, String newAttributeType);
 	
 }

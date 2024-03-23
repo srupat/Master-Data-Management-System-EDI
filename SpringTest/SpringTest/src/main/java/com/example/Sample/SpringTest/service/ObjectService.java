@@ -11,4 +11,6 @@ public interface ObjectService {
     List<Object> getAllObjectsForTemplate(String templateName);
 
     void deleteObject(Object o);
+
+
 }
