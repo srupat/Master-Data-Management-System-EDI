@@ -1,16 +1,22 @@
 package com.example.Sample.SpringTest.collection;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Attribute_Object {
+public abstract class Attribute_Object {
     protected String name;
     // will need to add the val according to data type
-
+    
     @JsonCreator
     public Attribute_Object(@JsonProperty("name") String name){
         this.name = name;
     }
+    
+    public String getName() {
+    	return this.name;
+    }  
+    public abstract String getVal();
+    public abstract String getType();
+    public abstract Bool compare(String operation, Attribute_Object obj);
 }
 
 class Int extends Attribute_Object{
@@ -20,6 +26,40 @@ class Int extends Attribute_Object{
         super(name);
         this.val = val;
     }
+    
+	@Override
+	public String getVal() {
+		
+		return String.valueOf(val);
+	}
+	
+	@Override
+	public String getType() {
+		
+		return "int";
+	}
+
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == Integer.parseInt(obj.getVal());
+		case ">":
+			result = this.val > Integer.parseInt(obj.getVal());
+		case "<":
+			result = this.val < Integer.parseInt(obj.getVal());
+		case "<=":
+			result = this.val <= Integer.parseInt(obj.getVal());
+		case ">=":
+			result = this.val >= Integer.parseInt(obj.getVal());
+		case "!=":
+			result = this.val != Integer.parseInt(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
+	}
 }
 
 class Float extends Attribute_Object{
@@ -29,6 +69,37 @@ class Float extends Attribute_Object{
         super(name);
         this.val = val;
     }
+	@Override
+	public String getVal() {
+		
+		return String.valueOf(val);
+	}
+	@Override
+	public String getType() {
+		
+		return "float";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == java.lang.Float.parseFloat(obj.getVal());
+		case ">":
+			result = this.val > java.lang.Float.parseFloat(obj.getVal());
+		case "<":
+			result = this.val < java.lang.Float.parseFloat(obj.getVal());
+		case "<=":
+			result = this.val <= java.lang.Float.parseFloat(obj.getVal());
+		case ">=":
+			result = this.val >= java.lang.Float.parseFloat(obj.getVal());
+		case "!=":
+			result = this.val != java.lang.Float.parseFloat(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
+	}
 }
 
 class Strings extends Attribute_Object{
@@ -38,6 +109,27 @@ class Strings extends Attribute_Object{
         super(name);
         this.val = val;
     }
+	@Override
+	public String getVal() {
+		
+		return val;
+	}
+	@Override
+	public String getType() {
+		
+		return "String";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val.equals(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
+	}
 }
 
 class Bool extends Attribute_Object{
@@ -47,6 +139,62 @@ class Bool extends Attribute_Object{
         super(name);
         this.val = val;
     }
+	@Override
+	public String getVal() {
+		
+		return String.valueOf(val);
+	}
+	@Override
+	public String getType() {
+		
+		return "bool";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		//nothing thought to be done here
+		return null;
+	}
+}
+
+class Double extends Attribute_Object{
+    private double val;
+    @JsonCreator
+    public Double(@JsonProperty("name") String name,@JsonProperty("val") double  val){
+        super(name);
+        this.val = val;
+    }
+	@Override
+	public String getVal() {
+		
+		return String.valueOf(val);
+	}
+	@Override
+	public String getType() {
+		
+		return "boolean";
+	}
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		boolean result = false;
+		switch (operation) {
+		case "==":
+			result = this.val == java.lang.Double.parseDouble(obj.getVal());
+		case ">":
+			result = this.val > java.lang.Double.parseDouble(obj.getVal());
+		case "<":
+			result = this.val < java.lang.Double.parseDouble(obj.getVal());
+		case "<=":
+			result = this.val <= java.lang.Double.parseDouble(obj.getVal());
+		case ">=":
+			result = this.val >= java.lang.Double.parseDouble(obj.getVal());
+		case "!=":
+			result = this.val != java.lang.Double.parseDouble(obj.getVal());
+		}
+		Bool returnObj = new Bool("result", result);
+		return returnObj;
+	}
 }
 
 class ObjType extends Attribute_Object{
@@ -58,5 +206,51 @@ class ObjType extends Attribute_Object{
         super(name);
         this.obj = obj;
     }
+    
+	@Override
+	public String getVal() {
+		
+		return obj.toString();
+	}
+
+	@Override
+	public String getType() {
+		
+		return "Template";
+	}
+
+	@Override
+	public Bool compare(String operation, Attribute_Object obj) {
+		
+		//complex object comparison not supported
+		return null;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

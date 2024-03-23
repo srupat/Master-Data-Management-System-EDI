@@ -1,15 +1,26 @@
 package com.example.Sample.SpringTest.collection;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.Float;
+import java.math.BigInteger;
 import java.util.List;
-
-import java.lang.*;
-
 
 @Document(collection = "object")
 public class Object {
+
+    @Id
+    private BigInteger id;
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
     String obj_template;
     String obj_name;
     List<Attribute_Object> attributes;
@@ -38,7 +49,7 @@ public class Object {
                 break;
             case "float":
                 try {
-//                    Attribute_Object obj;
+                	//  Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Float(name, Float.parseFloat(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
@@ -49,6 +60,14 @@ public class Object {
                 try {
 //                    Attribute_Object obj;
                     obj = new com.example.Sample.SpringTest.collection.Bool(name, Boolean.parseBoolean(val));
+                    addNewObj(obj);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(e);
+                }
+            case "double":
+                try {
+//                    Attribute_Object obj;
+                    obj = new com.example.Sample.SpringTest.collection.Double(name, java.lang.Double.parseDouble(val));
                     addNewObj(obj);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
@@ -68,9 +87,7 @@ public class Object {
         return obj;
 
     }
-
-
-
+    
     public String getObj_template() {
         return obj_template;
     }
@@ -104,5 +121,30 @@ public class Object {
         this.attributes = attributes;
     }
 
-
+    public String getAttributeValue(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element.getVal();
+    		}
+    	}
+    	return null;
+    }
+    
+    public String getAttributeType(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element.getVal();
+    		}
+    	}
+    	return null;
+    }
+    
+    public Attribute_Object getAttributeObject(String attributeName) {		
+    	for(Attribute_Object element : attributes) {
+    		if(element.getName().equals(attributeName)) {
+    			return element;
+    		}
+    	}
+    	return null;
+    }
 }

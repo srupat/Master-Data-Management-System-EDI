@@ -1,9 +1,14 @@
 package com.example.Sample.SpringTest.collection;
 
 public class Attribute_Template {
+	
 	private String attribute_name;
 	private String attribute_type;
+	private String expression;
 	
+	public String getExpression() {
+		return expression;
+	}
 	public String getAttribute_name() {
 		return attribute_name;
 	}
@@ -17,6 +22,7 @@ public class Attribute_Template {
 		this.attribute_type = attribute_type;
 	}
 	
-	
-	
+	public void attachExpression(String expr) {
+		this.expression = expr;
+	}
 }

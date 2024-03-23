@@ -1,5 +1,17 @@
 package com.example.Sample.SpringTest.service;
 
+import java.util.List;
+
+import com.example.Sample.SpringTest.collection.Object;
+
 public interface ObjectService {
-    com.example.Sample.SpringTest.collection.Object findByObjName(String ObjName);
+	
+    Object findByObjName(String ObjName);
+    
+    List<Object> getAllObjectsForTemplate(String templateName);
+
+    void deleteObject(Object o);
+
+    Long updateObjectName(String oldName, String newName);
+    Long updateObjectTemplateName(String oldName, String newName);
 }
