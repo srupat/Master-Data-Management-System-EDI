@@ -55,38 +55,66 @@ const ExpressionEval = () => {
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
   const [selectedJsonData, setSelectedJsonData] = useState(null);
-  const handleEdit = (edit) => {
-    // Ensure selectedJsonData is defined and has the template_name property
-    if (!selectedJsonData || !selectedJsonData.template_name) {
-      console.error("JSON data or template_name property is undefined.");
-      return;
-    }
+ 
+ 
+  // const handleEdit = (edit) => {
 
-    // Construct the path based on the template_name, namespace, and attribute name
-    let path = selectedJsonData.template_name;
+  //   console.log(edit)
 
-    if (edit.namespace) {
-      path += "." + edit.namespace.join(".");
-    }
+  //   // Ensure selectedJsonData is defined and has the template_name property
+  //   if (!selectedJsonData || !selectedJsonData.template_name) {
+  //     console.error("JSON data or template_name property is undefined.");
+  //     return;
+  //   }
 
-    // Check if 'a' is an array and if the attribute name exists in it
-    // Check if 'a' is an array and if the attribute name exists in it
-    if (Array.isArray(selectedJsonData.a) && selectedJsonData.a[edit.name] && String(edit.namespace) == "a") {
-      // Retrieve the attribute name at the specified index
-      const attributeName = selectedJsonData.a[edit.name];
-      // Append the attribute name to the path
-      path += "." + attributeName;
-    } else {
-      // Retrieve the attribute name at the specified index
-      const attributeName = selectedJsonData.e[edit.name];
-      // Append the attribute name to the path
-      path += "." + attributeName;
-    }
+  //   // Construct the path based on the template_name, namespace, and attribute name
+  //   let path = selectedJsonData.template_name;
+
+  //   if (edit.namespace) {
+  //     path += "." + edit.namespace.join(".");
+  //   }
+
+  //   // Check if 'a' is an array and if the attribute name exists in it
+  //   // Check if 'a' is an array and if the attribute name exists in it
+  //   if (Array.isArray(selectedJsonData.a) && selectedJsonData.a[edit.name] && String(edit.namespace) == "a") {
+  //     // Retrieve the attribute name at the specified index
+  //     const attributeName = selectedJsonData.a[edit.name];
+  //     // Append the attribute name to the path
+  //     path += "." + attributeName;
+  //   } else {
+  //     // Retrieve the attribute name at the specified index
+  //     const attributeName = selectedJsonData.e[edit.name];
+  //     // Append the attribute name to the path
+  //     path += "." + attributeName;
+  //   }
     
-    // Set the textbox value to the constructed path
-    setTextBoxValue(textBoxValue + path);
-  };
+  //   // Set the textbox value to the constructed path
+  //   setTextBoxValue(textBoxValue + path);
+  // };
 
+
+  const handleEdit = (edit) => {
+    // Ensure the necessary data is present in the edit object
+    if (!edit || !edit.namespace || !edit.name) {
+        console.error("Edit data is invalid.");
+        return;
+    }
+
+    // Construct the path based on the edit data
+    let path = '';
+
+    // Append the namespace if it exists
+    if (edit.namespace == 'a' && edit.namespace.length > 0) {
+        path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.a[edit.name];
+    };
+    if (edit.namespace == 'e' && edit.namespace.length > 0) {
+      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.e[edit.name];
+    };
+
+    // Set the textbox value to the constructed path
+    setTextBoxValue(textBoxValue + " " + path);
+    
+}
 
 
 
@@ -171,7 +199,7 @@ const ExpressionEval = () => {
           </div>
         </div>
 
-        <div className="bg-white p-4 h-2/3 flex flex-col">
+        <div className="bg-white p-4 h-3/5 flex flex-col">
           <h2 className="text-lg font-semibold mb-4">Expression Creation</h2>
           <input
             type="text"
