@@ -195,8 +195,30 @@ const ExpressionEval = () => {
                     <JSONTree
                       src={templateData}
                       onEdit={handleEdit}
-                      readOnly // Prevents editing of textbox
+                      className="transparent-brackets"
+                      shouldExpandNode={() => false}
+                      theme={{
+                        base00: "white",
+                        base01: "#000",
+                        base02: "white",
+                        base03: "#444",
+                        base04: "white",
+                        base05: "white",
+                        base06: "white",
+                        base07: "#444",
+                        base08: "#444",
+                        base09: "rgba(70, 70, 230, 1)",
+                        base0A: "white",
+                        base0B: "white",
+                        base0C: "white",
+                        base0D: "rgba(70, 70, 230, 1)",
+                        base0E: "rgba(70, 70, 230, 1)",
+                        base0F: "rgba(70, 70, 230, 1)"
+                      }}
+                      displayDataTypes={false} // Hide data types 
+                      hideRoot
                     />
+                    
                   </div>
                 </div>
               );
