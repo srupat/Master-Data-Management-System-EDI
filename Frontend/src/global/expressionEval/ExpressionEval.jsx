@@ -1,65 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JSONTree from 'react-json-view';
 import './TemplateList.css';
+import { apiClient } from '../api/ApiClient';
+import { getAllTemplateForExpressionCreation, submitExpression } from '../api/TemplateApiServices';
 
 const ExpressionEval = () => {
 
-  //Note:
-  // This variable should get the json in the below format for ops
-  // Do so with the axiosclient in api/TemplateApiService
-  // Also, the string should be sent by submit button. Route to respective uri by param as well
-  const jsonData = [
-    {
-      "template_name": "Induction-Motor",
-      "a": [
-        "Month",
-        "Unitsales",
-        "Price"
-      ],
-      "e": [
-        "husn",
-        "karim",
-        "mahana"
-      ]
-    },
-    {
-      "template_name": "yalamiha",
-      "e": [
-        "Khaalid"
-      ]
-    },
-    {
-      "template_name": "template_3",
-      "a": [
-        "Attribute_1",
-        "Attribute_2",
-        "Attribute_3"
-      ],
-      "e": [
-        "Element_1",
-        "Element_2"
-      ]
-    },
-    {
-      "template_name": "template_4",
-      "a": [
-        "Attribute_A",
-        "Attribute_B",
-        "Attribute_C"
-      ],
-      "e": [
-        "Element_X",
-        "Element_Y",
-        "Element_Z"
-      ]
-    },
-    // Add more JSON objects as needed
-  ];
-
-
+  const [templateName, setTemplateName] = useState('');
+  const [attributeName, setAttributeName] = useState('');
+  const [jsonData, setJsonData] = useState([]); // State to store the fetched JSON data
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
   const [selectedJsonData, setSelectedJsonData] = useState(null);
+
+  useEffect(() => {
+    // Function to fetch JSON data from the backend
+    getAllTemplateForExpressionCreation()
+    .then(response => {
+      setJsonData(response.data)
+    })
+  }, []);
 
 
   // const handleEdit = (edit) => {
@@ -98,30 +58,23 @@ const ExpressionEval = () => {
   // };
 
 
-  const handleEdit = (edit) => {
-    // Ensure the necessary data is present in the edit object
-    if (!edit || !edit.namespace || !edit.name) {
-      console.error("Edit data is invalid.");
-      return;
+  const handleEdit = (edit) => {  
+    let path = edit.existing_src.template_name;
+
+    if(edit.name === "attribute_name"){
+      path += ".a";
+        setTemplateName(edit.existing_src.template_name);
+        setAttributeName(edit.new_value);
     }
 
-    // Construct the path based on the edit data
-    let path = '';
-
-    // Append the namespace if it exists
-    if (edit.namespace == 'a' && edit.namespace.length > 0) {
-      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.a[edit.name];
-    };
-    if (edit.namespace == 'e' && edit.namespace.length > 0) {
-      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.e[edit.name];
-    };
-
-    // Set the textbox value to the constructed path
-    setTextBoxValue(textBoxValue + " " + path);
-
-  }
-
-
+    else if(edit.name === "expression"){
+      path += ".e";
+    }
+    console.log(edit)
+    
+    path += "." + edit.new_value;
+    setTextBoxValue(textBoxValue + ' ' + path)
+  };
 
 
   const handleCheckboxChange = (template, index) => {
@@ -153,15 +106,17 @@ const ExpressionEval = () => {
   };
 
   // Function to append operators and brackets to the textbox
-  const appendToTextBox = (symbol) => {
+  const appendToTextBox =  (symbol) => {
     setTextBoxValue(textBoxValue + symbol);
   };
 
   // Function to handle submission and parse the mathematical expression
   const handleSubmit = () => {
-    // Parse the mathematical expression here
     console.log('Parsing mathematical expression:', textBoxValue);
     // You can perform further actions here, such as sending the parsed expression to a backend server
+
+    submitExpression(templateName, attributeName, textBoxValue);
+
   };
 
   return (
@@ -238,27 +193,27 @@ const ExpressionEval = () => {
 
           <div className="flex justify-start">
             {/* Arithmetic operators */}
-            <button onClick={() => appendToTextBox('+')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+</button>
-            <button onClick={() => appendToTextBox('-')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">-</button>
-            <button onClick={() => appendToTextBox('*')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">x</button>
-            <button onClick={() => appendToTextBox('/')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">÷</button>
-            <button onClick={() => appendToTextBox('%')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">%</button>
+            <button onClick={() => appendToTextBox(' +')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+</button>
+            <button onClick={() => appendToTextBox(' -')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">-</button>
+            <button onClick={() => appendToTextBox(' *')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">x</button>
+            <button onClick={() => appendToTextBox(' /')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">÷</button>
+            <button onClick={() => appendToTextBox(' %')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">%</button>
 
             {/* Logical operators */}
-            <button onClick={() => appendToTextBox('&')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">&</button>
-            <button onClick={() => appendToTextBox('|')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">|</button>
+            <button onClick={() => appendToTextBox(' &')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">&</button>
+            <button onClick={() => appendToTextBox(' |')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">|</button>
 
             {/* Comparison operators */}
-            <button onClick={() => appendToTextBox('==')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">==</button>
-            <button onClick={() => appendToTextBox('!=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">!=</button>
-            <button onClick={() => appendToTextBox('<')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<'}</button>
-            <button onClick={() => appendToTextBox('>')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>'}</button>
-            <button onClick={() => appendToTextBox('<=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<='}</button>
-            <button onClick={() => appendToTextBox('>=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>='}</button>
+            <button onClick={() => appendToTextBox(' ==')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">==</button>
+            <button onClick={() => appendToTextBox(' !=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">!=</button>
+            <button onClick={() => appendToTextBox(' <')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<'}</button>
+            <button onClick={() => appendToTextBox(' >')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>'}</button>
+            <button onClick={() => appendToTextBox(' <=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<='}</button>
+            <button onClick={() => appendToTextBox(' >=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>='}</button>
 
             {/* Brackets */}
-            <button onClick={() => appendToTextBox('(')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4"> ( </button>
-            <button onClick={() => appendToTextBox(')')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"> ) </button>
+            <button onClick={() => appendToTextBox(' (')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4"> ( </button>
+            <button onClick={() => appendToTextBox(' )')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"> ) </button>
 
           </div>
           <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded">Submit</button>
