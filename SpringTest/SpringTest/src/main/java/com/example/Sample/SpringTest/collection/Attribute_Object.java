@@ -29,19 +29,19 @@ class Int extends Attribute_Object{
     }
     
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return String.valueOf(val);
 	}
 	
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "int";
 	}
 
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		boolean result = false;
 		switch (operation) {
 		case "==":
@@ -77,17 +77,17 @@ class Float extends Attribute_Object{
     }
 	@Override
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return String.valueOf(val);
 	}
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "float";
 	}
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		boolean result = false;
 		switch (operation) {
 		case "==":
@@ -123,17 +123,17 @@ class Strings extends Attribute_Object{
     }
 	@Override
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return val;
 	}
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "String";
 	}
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		boolean result = false;
 		switch (operation) {
 		case "==":
@@ -153,17 +153,17 @@ class Bool extends Attribute_Object{
     }
 	@Override
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return String.valueOf(val);
 	}
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "bool";
 	}
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		//nothing thought to be done here
 		return null;
 	}
@@ -178,17 +178,17 @@ class Double extends Attribute_Object{
     }
 	@Override
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return String.valueOf(val);
 	}
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "boolean";
 	}
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		boolean result = false;
 		switch (operation) {
 		case "==":
@@ -227,19 +227,19 @@ class ObjType extends Attribute_Object{
     
 	@Override
 	public String getVal() {
-		// TODO Auto-generated method stub
+		
 		return obj.toString();
 	}
 
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
+		
 		return "Template";
 	}
 
 	@Override
 	public Bool compare(String operation, Attribute_Object obj) {
-		// TODO Auto-generated method stub
+		
 		//complex object comparison not supported
 		return null;
 	}

@@ -7,7 +7,7 @@ public class ArithmeticExpression extends MDM_Expressions {
 	
 	public ArithmeticExpression(String name, String expressionString) {
 		super(name, expressionString);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override

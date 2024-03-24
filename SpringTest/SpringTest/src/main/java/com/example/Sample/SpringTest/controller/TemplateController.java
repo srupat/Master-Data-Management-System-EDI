@@ -2,9 +2,15 @@ package com.example.Sample.SpringTest.controller;
 
 import com.example.Sample.SpringTest.repository.TemplateRepository;
 
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.internal.bulk.UpdateRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.Sample.SpringTest.collection.ArithmeticExpression;
@@ -17,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ObjectMapper.JSON_Parsor;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +36,15 @@ public class TemplateController {
 	@Autowired
 	private TemplateRepository trepo;	
 	private int templateCount = 0;
+
+	@Autowired
+	MongoTemplate mongoTemplate;
 	
 	@PostMapping("/create/template")
 	public Template save(@RequestBody Template temp) {
 		System.out.println("post mapping method called");
 		try{
-			temp.setId(templateCount);
+			temp.setId(BigInteger.valueOf(templateCount));
 			templateCount++;
 			templateService.save(temp);
 		}
@@ -71,7 +81,7 @@ public class TemplateController {
 		return null;
 	}
 
-	@DeleteMapping("/delete/{name}")
+	@DeleteMapping("/delete/template/{name}")
 	@ResponseBody
 	public void deleteByName(@PathVariable String name){
 		try {
@@ -121,6 +131,36 @@ public class TemplateController {
 		deleteByName(templateName);
 		templateService.save(template);
 		System.out.println("A new expression is added to the template......");
+	}
+
+	@GetMapping("/templates/{text}")
+	public List<Template> search(@PathVariable String text){
+		System.out.println("Searching for template with name " + text);
+		return templateService.search(text);
+	}
+
+	@PutMapping("/template/{oldName}/{newName}")
+	public void updateName(@PathVariable String oldName, @PathVariable String newName){
+		try{
+			templateService.updateTemplateName(oldName, newName);
+			return;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error"+ e);
+		}
+	}
+
+	@PutMapping("/attributes/{tempName}/{oldAttributeName}/{newAttributeName}/{newAttributeType}")
+	public void updateName(@PathVariable String tempName,@PathVariable String oldAttributeName, @PathVariable String newAttributeName, @PathVariable String newAttributeType){
+		try{
+			templateService.updateAttributes(tempName,oldAttributeName, newAttributeName, newAttributeType);
+			return;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error"+ e);
+		}
 	}
 	
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ObjectMapper.JSON_Parsor;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,8 @@ public class ObjController {
     
     @Autowired
     private ObjectService oservice;
+
+    private int objCount = 0;
     
     @PostMapping("/create/object")
     public Object submitObject(@RequestBody String json) throws JSONException {
@@ -64,6 +68,8 @@ public class ObjController {
             System.out.println("Execution until i = " + i);
         }
         System.out.println(attributeList);
+        obj.setId(BigInteger.valueOf(objCount));
+        objCount ++;
         orepo.save(obj);
     }
     catch(Exception e){
@@ -130,4 +136,43 @@ public class ObjController {
     	}
     	return null;
     }
+
+    @DeleteMapping("/delete/object/{name}")
+    @ResponseBody
+    public void deleteByName(@PathVariable String name){
+        try {
+            System.out.println("Deleting object: " + name);
+
+            Object obj = oservice.findByObjName(name);
+            oservice.deleteObject(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PutMapping("/object/{oldName}/{newName}")
+    public void updateObjName(@PathVariable String oldName, @PathVariable String newName){
+        try{
+            oservice.updateObjectName(oldName, newName);
+            return;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error"+ e);
+        }
+    }
+
+    @PutMapping("/object/template/{oldName}/{newName}")
+    public void updateObjTemplateName(@PathVariable String oldName, @PathVariable String newName){
+        try{
+            templateService.updateTemplateName(oldName, newName);
+            return;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error"+ e);
+        }
+    }
 }
+
+
