@@ -14,7 +14,8 @@ public abstract class Attribute_Object {
     public String getName() {
     	return this.name;
     }  
-    public abstract String getVal();
+    
+    public abstract String  getVal(); 
     public abstract String getType();
     public abstract Bool compare(String operation, Attribute_Object obj);
 }
@@ -27,7 +28,6 @@ class Int extends Attribute_Object{
         this.val = val;
     }
     
-	@Override
 	public String getVal() {
 		
 		return String.valueOf(val);
@@ -46,16 +46,22 @@ class Int extends Attribute_Object{
 		switch (operation) {
 		case "==":
 			result = this.val == Integer.parseInt(obj.getVal());
+			break;
 		case ">":
 			result = this.val > Integer.parseInt(obj.getVal());
+			break;
 		case "<":
 			result = this.val < Integer.parseInt(obj.getVal());
+			break;
 		case "<=":
 			result = this.val <= Integer.parseInt(obj.getVal());
+			break;
 		case ">=":
 			result = this.val >= Integer.parseInt(obj.getVal());
+			break;
 		case "!=":
 			result = this.val != Integer.parseInt(obj.getVal());
+			break;
 		}
 		Bool returnObj = new Bool("result", result);
 		return returnObj;
@@ -86,16 +92,22 @@ class Float extends Attribute_Object{
 		switch (operation) {
 		case "==":
 			result = this.val == java.lang.Float.parseFloat(obj.getVal());
+			break;
 		case ">":
 			result = this.val > java.lang.Float.parseFloat(obj.getVal());
+			break;
 		case "<":
 			result = this.val < java.lang.Float.parseFloat(obj.getVal());
+			break;
 		case "<=":
 			result = this.val <= java.lang.Float.parseFloat(obj.getVal());
+			break;
 		case ">=":
 			result = this.val >= java.lang.Float.parseFloat(obj.getVal());
+			break;
 		case "!=":
 			result = this.val != java.lang.Float.parseFloat(obj.getVal());
+			break;
 		}
 		Bool returnObj = new Bool("result", result);
 		return returnObj;
@@ -181,16 +193,22 @@ class Double extends Attribute_Object{
 		switch (operation) {
 		case "==":
 			result = this.val == java.lang.Double.parseDouble(obj.getVal());
+			break;
 		case ">":
 			result = this.val > java.lang.Double.parseDouble(obj.getVal());
+			break;
 		case "<":
 			result = this.val < java.lang.Double.parseDouble(obj.getVal());
+			break;
 		case "<=":
 			result = this.val <= java.lang.Double.parseDouble(obj.getVal());
+			break;
 		case ">=":
 			result = this.val >= java.lang.Double.parseDouble(obj.getVal());
+			break;
 		case "!=":
 			result = this.val != java.lang.Double.parseDouble(obj.getVal());
+			break;
 		}
 		Bool returnObj = new Bool("result", result);
 		return returnObj;

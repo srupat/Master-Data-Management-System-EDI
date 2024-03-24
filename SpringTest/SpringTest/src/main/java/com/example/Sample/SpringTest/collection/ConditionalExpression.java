@@ -44,5 +44,5 @@ public class ConditionalExpression extends MDM_Expressions {
 					return "Incorrect datatype";				
 		}
 	}
-
+	
 }

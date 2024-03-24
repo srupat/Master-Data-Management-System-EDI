@@ -1,6 +1,7 @@
 package com.example.Sample.SpringTest.controller;
 
 import com.example.Sample.SpringTest.collection.Attribute_Object;
+import com.example.Sample.SpringTest.collection.ConditionalExpression;
 import com.example.Sample.SpringTest.collection.MDM_Expressions;
 import com.example.Sample.SpringTest.collection.ArithmeticExpression;
 import com.example.Sample.SpringTest.collection.Object;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ObjectMapper.JSON_Parsor;
-
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -31,8 +32,6 @@ public class ObjController {
     
     @Autowired
     private ObjectService oservice;
-
-    private int objCount = 0;
     
     @PostMapping("/create/object")
     public Object submitObject(@RequestBody String json) throws JSONException {
@@ -45,10 +44,9 @@ public class ObjController {
 
         List<Attribute_Object> attributeList = new ArrayList<>();  //
         Object obj = new Object(objTemplate, objName, attributeList);  
-
+        
         for (int i = 0; i < attributesArray.length(); i++) {
-            JSONObject attributeObject = attributesArray.getJSONObject(i);
-
+            JSONObject attributeObject = attributesArray.getJSONObject(i);           
             String attributeName = attributeObject.getString("attribute_name");
             String attributeValue;
             String expression = templateService.getAtrributeExpression(objTemplate, attributeName);
@@ -56,7 +54,9 @@ public class ObjController {
             MDM_Expressions expressionObj = new ArithmeticExpression("blank", expression);
             if(expression != null) {
             	//change the variables into actual values
-            	attributeValue =  expressionObj.replaceVarsInExpressionString(obj, templateService).evaluate();
+            	HashMap<String, Object> hashmap = new HashMap<>();
+            	hashmap.put(objTemplate, obj);
+            	attributeValue =  expressionObj.replaceVarsInExpressionString(hashmap, templateService).evaluate();
             }else {
             	attributeValue = attributeObject.getString("attribute_value");
             }
@@ -64,8 +64,6 @@ public class ObjController {
             System.out.println("Execution until i = " + i);
         }
         System.out.println(attributeList);
-        obj.setId(BigInteger.valueOf(objCount));
-        objCount ++;
         orepo.save(obj);
     }
     catch(Exception e){
@@ -105,52 +103,31 @@ public class ObjController {
     
     @GetMapping("/evaluate/{templateName}/{expressionName}")
     public String evaluateExpression(@PathVariable String expressionName, @PathVariable String templateName) {
-    	List<Object> objects = oservice.getAllObjectsForTemplate(templateName);
     	Template template = templateService.findByTemplateName(templateName);
     	MDM_Expressions obj = template.findExpressionByName(expressionName);
-    	for(Object element : objects) {
-    		String result = obj.replaceVarsInExpressionString(element, templateService).evaluate();
-    		System.out.println(result);
-    	}	
+    	String expString = obj.getExpressionString();
+    	
+    	String[] words = expString.split("\\s+");
+    	List<String> usedTemplates = new ArrayList<>();
+    	List<List<Object>> objectList = new ArrayList<>();
+    	for(String word : words) {
+    		if (word.matches("[a-zA-Z\\.]+")) {
+    			int dotIndex = word.indexOf('.');
+    			String usedTemplate = word.substring(0, dotIndex);
+    			if(!usedTemplates.contains(usedTemplate)) {
+    				usedTemplates.add(usedTemplate);
+    				List<Object> objects = oservice.getAllObjectsForTemplate(usedTemplate);
+    				objectList.add(objects);   
+    			}
+    		}
+    	}
+    	for(int i = 0; i < objectList.get(0).size() ; i++) {
+    		Map<String, Object> hashMap = new HashMap<>();
+    		for(int j = 0; j < objectList.size(); j++) {
+    			hashMap.put(usedTemplates.get(j),objectList.get(j).get(i));   		
+    		}
+    		obj.replaceVarsInExpressionString(hashMap, templateService).evaluate();
+    	}
     	return null;
     }
-
-    @DeleteMapping("/delete/object/{name}")
-    @ResponseBody
-    public void deleteByName(@PathVariable String name){
-        try {
-            System.out.println("Deleting object: " + name);
-
-            Object obj = oservice.findByObjName(name);
-            oservice.deleteObject(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @PutMapping("/object/{oldName}/{newName}")
-    public void updateObjName(@PathVariable String oldName, @PathVariable String newName){
-        try{
-            oservice.updateObjectName(oldName, newName);
-            return;
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error"+ e);
-        }
-    }
-
-    @PutMapping("/object/template/{oldName}/{newName}")
-    public void updateObjTemplateName(@PathVariable String oldName, @PathVariable String newName){
-        try{
-            templateService.updateTemplateName(oldName, newName);
-            return;
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error"+ e);
-        }
-    }
 }
-
-
