@@ -1,5 +1,4 @@
-# Master-Data-Management-System
-### Platform to configure your data management system on MongoDB. 
+# Codeless platform for Analytics and Master Data Management in MongoDB
 
 ### Data Provision
 1. Start off by uploading the csv file wherein your previous data is stored
