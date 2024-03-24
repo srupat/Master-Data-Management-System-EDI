@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import JSONTree from 'react-json-view';
+import './TemplateList.css';
 
 const ExpressionEval = () => {
 
+  //Note:
+  // This variable should get the json in the below format for ops
+  // Do so with the axiosclient in api/TemplateApiService
+  // Also, the string should be sent by submit button. Route to respective uri by param as well
   const jsonData = [
     {
-      "template_name": "baradaf",
+      "template_name": "Induction-Motor",
       "a": [
         "Month",
         "Unitsales",
@@ -55,8 +60,8 @@ const ExpressionEval = () => {
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
   const [selectedJsonData, setSelectedJsonData] = useState(null);
- 
- 
+
+
   // const handleEdit = (edit) => {
 
   //   console.log(edit)
@@ -87,7 +92,7 @@ const ExpressionEval = () => {
   //     // Append the attribute name to the path
   //     path += "." + attributeName;
   //   }
-    
+
   //   // Set the textbox value to the constructed path
   //   setTextBoxValue(textBoxValue + path);
   // };
@@ -96,8 +101,8 @@ const ExpressionEval = () => {
   const handleEdit = (edit) => {
     // Ensure the necessary data is present in the edit object
     if (!edit || !edit.namespace || !edit.name) {
-        console.error("Edit data is invalid.");
-        return;
+      console.error("Edit data is invalid.");
+      return;
     }
 
     // Construct the path based on the edit data
@@ -105,7 +110,7 @@ const ExpressionEval = () => {
 
     // Append the namespace if it exists
     if (edit.namespace == 'a' && edit.namespace.length > 0) {
-        path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.a[edit.name];
+      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.a[edit.name];
     };
     if (edit.namespace == 'e' && edit.namespace.length > 0) {
       path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.e[edit.name];
@@ -113,8 +118,8 @@ const ExpressionEval = () => {
 
     // Set the textbox value to the constructed path
     setTextBoxValue(textBoxValue + " " + path);
-    
-}
+
+  }
 
 
 
@@ -166,10 +171,10 @@ const ExpressionEval = () => {
         <ul>
           {jsonData.map((data, index) => (
             <li key={index} className="mb-2">
-              <label className="flex items-center">
+              <div className="template-item">
                 <input type="checkbox" onChange={() => handleCheckboxChange(data.template_name, index)} className="mr-2" />
                 {data.template_name}
-              </label>
+              </div>
             </li>
           ))}
         </ul>
