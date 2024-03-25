@@ -1,77 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import JSONTree from 'react-json-view';
-import './TemplateList.css';
-import { apiClient } from '../api/ApiClient';
-import { getAllTemplateForExpressionCreation, submitExpression } from '../api/TemplateApiServices';
+import './TemplateView.css'
+import { getAllTemplateForExpressionCreation, submitExpressionForAttributeAttachment, submitExpressionForTemplateAttachment } from '../api/TemplateApiServices';
 
 const ExpressionEval = () => {
 
+  const [DataType, setDataType] = useState('');
+  const [dropdownValueForAttachment, setDropdownValueForAttachment] = useState('');
   const [templateName, setTemplateName] = useState('');
   const [attributeName, setAttributeName] = useState('');
+  const [expressionName, setExpressionName] = useState('');
+  const [expressionType, setExpressionType] = useState('');
   const [jsonData, setJsonData] = useState([]); // State to store the fetched JSON data
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
-  const [selectedJsonData, setSelectedJsonData] = useState(null);
+  const [selectedJsonData, setSelectedJsonData] = useState(null); // State to store selected JSON data
 
   useEffect(() => {
     // Function to fetch JSON data from the backend
     getAllTemplateForExpressionCreation()
-    .then(response => {
-      setJsonData(response.data)
-    })
+      .then(response => {
+        setJsonData(response.data)
+      })
   }, []);
 
-
-  // const handleEdit = (edit) => {
-
-  //   console.log(edit)
-
-  //   // Ensure selectedJsonData is defined and has the template_name property
-  //   if (!selectedJsonData || !selectedJsonData.template_name) {
-  //     console.error("JSON data or template_name property is undefined.");
-  //     return;
-  //   }
-
-  //   // Construct the path based on the template_name, namespace, and attribute name
-  //   let path = selectedJsonData.template_name;
-
-  //   if (edit.namespace) {
-  //     path += "." + edit.namespace.join(".");
-  //   }
-
-  //   // Check if 'a' is an array and if the attribute name exists in it
-  //   // Check if 'a' is an array and if the attribute name exists in it
-  //   if (Array.isArray(selectedJsonData.a) && selectedJsonData.a[edit.name] && String(edit.namespace) == "a") {
-  //     // Retrieve the attribute name at the specified index
-  //     const attributeName = selectedJsonData.a[edit.name];
-  //     // Append the attribute name to the path
-  //     path += "." + attributeName;
-  //   } else {
-  //     // Retrieve the attribute name at the specified index
-  //     const attributeName = selectedJsonData.e[edit.name];
-  //     // Append the attribute name to the path
-  //     path += "." + attributeName;
-  //   }
-
-  //   // Set the textbox value to the constructed path
-  //   setTextBoxValue(textBoxValue + path);
-  // };
-
-
-  const handleEdit = (edit) => {  
+  const handleEdit = (edit) => {
     let path = edit.existing_src.template_name;
 
-    if(edit.name === "attribute_name"){
+    if (edit.name === "attribute_name") {
       path += ".a";
-        setTemplateName(edit.existing_src.template_name);
-        setAttributeName(edit.new_value);
     }
 
-    else if(edit.name === "expression"){
+    else if (edit.name === "expression") {
       path += ".e";
     }
     console.log(edit)
-    
+
     path += "." + edit.new_value;
     setTextBoxValue(textBoxValue + ' ' + path)
   };
@@ -91,38 +55,36 @@ const ExpressionEval = () => {
   };
 
 
-  // Function to generate random tree elements
-  const generateRandomTreeElements = () => {
-    // Generate random number of tree elements (e.g., between 1 and 5)
-    const numElements = Math.floor(Math.random() * 5) + 1;
-    const treeElements = [];
-
-    // Generate each tree element
-    for (let i = 0; i < numElements; i++) {
-      treeElements.push(<div key={i}>Tree Element {i + 1}</div>);
-    }
-
-    return treeElements;
-  };
-
   // Function to append operators and brackets to the textbox
-  const appendToTextBox =  (symbol) => {
+  const appendToTextBox = (symbol) => {
     setTextBoxValue(textBoxValue + symbol);
   };
 
-  // Function to handle submission and parse the mathematical expression
   const handleSubmit = () => {
     console.log('Parsing mathematical expression:', textBoxValue);
-    // You can perform further actions here, such as sending the parsed expression to a backend server
 
-    submitExpression(templateName, attributeName, textBoxValue);
+    if (dropdownValueForAttachment === 'attributeExpression') {
+      submitExpressionForAttributeAttachment(templateName, attributeName, textBoxValue);
+    } else if (dropdownValueForAttachment === 'templateExpression') {
+      // Define expJson here
+      let ExpJson = {
+        name: expressionName,
+        expressionString: textBoxValue,
+        type: expressionType,
+        dataType: DataType
+      };
 
+      submitExpressionForTemplateAttachment(templateName, ExpJson)
+        .then(console.log(ExpJson))
+        .catch(error => console.log(error));
+    }
   };
 
   return (
     <div className="flex h-screen">
-      <div className="flex-none w-1/6 bg-gray-100 p-4 border-r border-gray-200">
+      <div className="flex-none w-1/5 bg-gray-100 p-4 border-r border-gray-200">
         <h2 className="text-lg font-semibold mb-4">Templates</h2>
+        <div>
         <ul>
           {jsonData.map((data, index) => (
             <li key={index} className="mb-2">
@@ -133,7 +95,110 @@ const ExpressionEval = () => {
             </li>
           ))}
         </ul>
+        </div>
+
+        {/* Horizontal line for segregation */}
+        <hr className="my-6 border-gray-300" />
+        <div>
+          {/* Form with inputs */}
+          <form>
+            <div className="mb-4">
+              <label htmlFor="templateName" className="block text-sm font-medium text-gray-700">Template Name</label>
+              <input
+                type="text"
+                id="templateName"
+                name="templateName"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                placeholder="Enter template name"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="templateDropdown" className="block text-sm font-medium text-gray-700">Select Option</label>
+              <select
+                id="templateDropdown"
+                name="templateDropdown"
+                value={dropdownValueForAttachment}
+                onChange={(e) => {
+                  setDropdownValueForAttachment(e.target.value);
+                  // Reset additional form options when dropdown value changes
+                }}
+                className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+              >
+                <option value="">Select...</option>
+                <option value="attributeExpression">Attribute Expression</option>
+                <option value="templateExpression">Template Expression</option>
+              </select>
+            </div>
+
+            {dropdownValueForAttachment === 'attributeExpression' && (
+              <div className="mb-4">
+                <label htmlFor="attributeName" className="block text-sm font-medium text-gray-700">Enter Attribute Name</label>
+                <input
+                  type="text"
+                  id="attributeName"
+                  name="attributeName"
+                  value={attributeName}
+                  onChange={(e) => setAttributeName(e.target.value)}
+                  className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                  placeholder="Enter Attribute name"
+                />
+              </div>
+            )}
+
+            {/* Additional form options for Template Expression */}
+            {dropdownValueForAttachment === 'templateExpression' && (
+              <div>
+                <div className="mb-4">
+                  <label htmlFor="expressionName" className="block text-sm font-medium text-gray-700">Enter Expression Name</label>
+                  <input
+                    type="text"
+                    id="expressionName"
+                    name="expressionName"
+                    value={expressionName}
+                    onChange={(e) => setExpressionName(e.target.value)}
+                    className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                    placeholder="Enter expression name"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="expressionType" className="block text-sm font-medium text-gray-700">Select Expression Type</label>
+                  <select
+                    id="expressionType"
+                    name="expressionType"
+                    value={expressionType}
+                    onChange={(e) => setExpressionType(e.target.value)}
+                    className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                  >
+                    <option value="">Select...</option>
+                    <option value="Conditional">Conditional</option>
+                    <option value="Arithmetic">Arithmetic</option>
+                  </select>
+                </div>
+                {/* Additional form options for Conditional Expression */}
+                {expressionType === 'Conditional' && (
+                  <div>
+                    <div className="mb-4">
+                      <label htmlFor="expressionType" className="block text-sm font-medium text-gray-700">Data Type</label>
+                      <input
+                        type="text"
+                        id="DataType"
+                        name="DataType"
+                        value={DataType}
+                        onChange={(e) => setDataType(e.target.value)}
+                        className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                        placeholder="Enter data type"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
+
 
       <div className="flex-1 flex flex-col">
         <div className="bg-gray-200 p-4 overflow-auto h-3/4">
@@ -173,7 +238,7 @@ const ExpressionEval = () => {
                       displayDataTypes={false} // Hide data types 
                       hideRoot
                     />
-                    
+
                   </div>
                 </div>
               );
