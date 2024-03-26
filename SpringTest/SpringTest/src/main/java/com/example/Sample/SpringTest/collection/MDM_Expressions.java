@@ -1,5 +1,6 @@
 package com.example.Sample.SpringTest.collection;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
 import com.example.Sample.SpringTest.service.TemplateService;
 
 public abstract class MDM_Expressions {
@@ -20,26 +21,31 @@ public abstract class MDM_Expressions {
 		this.expressionString = expressionString;
 	}
 	
-	public MDM_Expressions replaceVarsInExpressionString(Object obj, TemplateService templateService) {
+	public MDM_Expressions replaceVarsInExpressionString(Map<String, Object> hashMap, TemplateService templateService) {
 		String[] words = expressionString.split("\\s+");
 		for(String element : words) {
 			if (element.matches("[a-zA-Z\\.]+")) {
 				String[] components = element.split("\\.");
+				Object obj = hashMap.get(components[0]);
 				if(components[1].equals("e")) {
 					MDM_Expressions nestedExpression = templateService.findExpressionByName(components[2], components[0]);
-					nestedExpression = nestedExpression.replaceVarsInExpressionString(obj,templateService);
+					nestedExpression = nestedExpression.replaceVarsInExpressionString(hashMap,templateService);
 					nestedExpression.expressionString = "(" + nestedExpression.expressionString + ")";
 					expressionString = expressionString.replaceAll(element, nestedExpression.expressionString);
 				}else {
 					String value = obj.getAttributeValue(components[2]) ;
 					//value ="(" +  value + ")";
-					expressionString = expressionString.replaceAll(element, value);
-					
+					expressionString = expressionString.replaceAll(element, value);				
 				}
 			}
 		}
 		return this;
 	}
+	
+	public String getExpressionString() {
+		return this.expressionString;
+	}
+	
 	public abstract String evaluate();
 }
 
