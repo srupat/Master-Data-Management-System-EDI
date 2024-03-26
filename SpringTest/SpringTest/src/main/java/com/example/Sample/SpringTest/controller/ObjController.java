@@ -102,10 +102,11 @@ public class ObjController {
     
     
     @GetMapping("/evaluate/{templateName}/{expressionName}")
-    public String evaluateExpression(@PathVariable String expressionName, @PathVariable String templateName) {
+    public List<String> evaluateExpression(@PathVariable String expressionName, @PathVariable String templateName) {
     	Template template = templateService.findByTemplateName(templateName);
     	MDM_Expressions obj = template.findExpressionByName(expressionName);
     	String expString = obj.getExpressionString();
+    	List<String> result = new ArrayList<>();
     	
     	String[] words = expString.split("\\s+");
     	List<String> usedTemplates = new ArrayList<>();
@@ -126,8 +127,8 @@ public class ObjController {
     		for(int j = 0; j < objectList.size(); j++) {
     			hashMap.put(usedTemplates.get(j),objectList.get(j).get(i));   		
     		}
-    		obj.replaceVarsInExpressionString(hashMap, templateService).evaluate();
+    		result.add(obj.replaceVarsInExpressionString(hashMap, templateService).evaluate());
     	}
-    	return null;
+    	return result;
     }
 }
