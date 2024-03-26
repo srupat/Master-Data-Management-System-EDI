@@ -86,14 +86,14 @@ const ExpressionEval = () => {
         <h2 className="text-lg font-semibold mb-4">Templates</h2>
         <div>
         <ul>
-          {jsonData.map((data, index) => (
-            <li key={index} className="mb-2">
-              <div className="template-item">
-                <input type="checkbox" onChange={() => handleCheckboxChange(data.template_name, index)} className="mr-2" />
-                {data.template_name}
-              </div>
-            </li>
-          ))}
+        {Array.isArray(jsonData) && jsonData.map((data, index) => (
+          <li key={index} className="mb-2">
+            <div className="template-item">
+              <input type="checkbox" onChange={() => handleCheckboxChange(data.template_name, index)} className="mr-2" />
+              {data.template_name}
+            </div>
+          </li>
+        ))}
         </ul>
         </div>
 

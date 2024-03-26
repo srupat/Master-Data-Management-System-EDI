@@ -91,7 +91,9 @@ class Float extends Attribute_Object{
 		boolean result = false;
 		switch (operation) {
 		case "==":
+			System.out.println("entered comparison");
 			result = this.val == java.lang.Float.parseFloat(obj.getVal());
+			System.out.println(result);
 			break;
 		case ">":
 			result = this.val > java.lang.Float.parseFloat(obj.getVal());
@@ -167,7 +169,16 @@ class Bool extends Attribute_Object{
 		//nothing thought to be done here
 		return null;
 	}
+
+	public String toString(){
+		return this.val + "";
+	}
 }
+
+
+
+
+
 
 class Double extends Attribute_Object{
     private double val;
@@ -213,6 +224,7 @@ class Double extends Attribute_Object{
 		Bool returnObj = new Bool("result", result);
 		return returnObj;
 	}
+
 }
 
 class ObjType extends Attribute_Object{

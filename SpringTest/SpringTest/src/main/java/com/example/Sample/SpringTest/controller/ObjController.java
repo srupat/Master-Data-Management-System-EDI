@@ -121,17 +121,23 @@ public class ObjController {
     	MDM_Expressions obj = template.findExpressionByName(expressionName);
     	String expString = obj.getExpressionString();
     	List<String> result = new ArrayList<>();
-    	
+        System.out.println(template.getTemplate_name());
     	String[] words = expString.split("\\s+");
     	List<String> usedTemplates = new ArrayList<>();
     	List<List<Object>> objectList = new ArrayList<>();
     	for(String word : words) {
+            System.out.println(word);
     		if (word.matches("[a-zA-Z\\.]+")) {
     			int dotIndex = word.indexOf('.');
     			String usedTemplate = word.substring(0, dotIndex);
+                System.out.println(usedTemplate);
     			if(!usedTemplates.contains(usedTemplate)) {
     				usedTemplates.add(usedTemplate);
+                    System.out.println("-------------------used template -------");
+                    System.out.println("used template");
     				List<Object> objects = oservice.getAllObjectsForTemplate(usedTemplate);
+                    System.out.println("====================================");
+
     				objectList.add(objects);   
     			}
     		}
