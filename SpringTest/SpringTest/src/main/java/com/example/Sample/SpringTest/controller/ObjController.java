@@ -99,8 +99,22 @@ public class ObjController {
         }
 
     }
-    
-    
+
+    @GetMapping("/sort/{attNo}")
+    public List<Object> sort(@PathVariable String attNo){
+        try{
+//            System.out.println("Sorting objects of template " + template_name +"according to attribute "+attribute_name);
+            return oservice.sortObjectsByAttribute(attNo);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Got some exception");
+            System.err.println(e);
+            return null;
+        }
+    }
+
+
     @GetMapping("/evaluate/{templateName}/{expressionName}")
     public List<String> evaluateExpression(@PathVariable String expressionName, @PathVariable String templateName) {
     	Template template = templateService.findByTemplateName(templateName);

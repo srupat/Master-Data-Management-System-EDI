@@ -1,12 +1,12 @@
 .flex {
     display: flex;
   }
-  
+
   /* Ensure all flex items have the same size */
   .flex-none {
-    width: 200px; /* Set the width as desired */
+    width: 1/5vw; /* Set the width as desired */
   }
-  
+
   .template-item {
     font-family: Verdana, Geneva, sans-serif; /* Specify Verdana as the first choice */
     font-size: 14px; /* Adjust the font size as needed */
@@ -17,13 +17,13 @@
     cursor: pointer; /* Change cursor on hover */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
   }
-  
+
   .template-item:hover {
     background-color: #fff; /* White background color on hover */
     color: #000; /* Black text color on hover */
     font-weight: bold; /* Bold font on hover */
   }
-  
+
   /* Adjust checkbox alignment */
   input[type="checkbox"] {
     margin-right: 8px; /* Add space between checkbox and template name */

@@ -1,127 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JSONTree from 'react-json-view';
-import './TemplateList.css';
+import './TemplateView.css'
+import { getAllTemplates, submitExpressionForAttributeAttachment, submitExpressionForTemplateAttachment } from '../api/TemplateApiServices';
 
 const ExpressionEval = () => {
 
-  //Note:
-  // This variable should get the json in the below format for ops
-  // Do so with the axiosclient in api/TemplateApiService
-  // Also, the string should be sent by submit button. Route to respective uri by param as well
-  const jsonData = [
-    {
-      "template_name": "Induction-Motor",
-      "a": [
-        "Month",
-        "Unitsales",
-        "Price"
-      ],
-      "e": [
-        "husn",
-        "karim",
-        "mahana"
-      ]
-    },
-    {
-      "template_name": "yalamiha",
-      "e": [
-        "Khaalid"
-      ]
-    },
-    {
-      "template_name": "template_3",
-      "a": [
-        "Attribute_1",
-        "Attribute_2",
-        "Attribute_3"
-      ],
-      "e": [
-        "Element_1",
-        "Element_2"
-      ]
-    },
-    {
-      "template_name": "template_4",
-      "a": [
-        "Attribute_A",
-        "Attribute_B",
-        "Attribute_C"
-      ],
-      "e": [
-        "Element_X",
-        "Element_Y",
-        "Element_Z"
-      ]
-    },
-    // Add more JSON objects as needed
-  ];
-
-
+  const [DataType, setDataType] = useState('');
+  const [dropdownValueForAttachment, setDropdownValueForAttachment] = useState('');
+  const [templateName, setTemplateName] = useState('');
+  const [attributeName, setAttributeName] = useState('');
+  const [expressionName, setExpressionName] = useState('');
+  const [expressionType, setExpressionType] = useState('');
+  const [jsonData, setJsonData] = useState([]); // State to store the fetched JSON data
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [textBoxValue, setTextBoxValue] = useState('');
-  const [selectedJsonData, setSelectedJsonData] = useState(null);
+  const [selectedJsonData, setSelectedJsonData] = useState(null); // State to store selected JSON data
 
-
-  // const handleEdit = (edit) => {
-
-  //   console.log(edit)
-
-  //   // Ensure selectedJsonData is defined and has the template_name property
-  //   if (!selectedJsonData || !selectedJsonData.template_name) {
-  //     console.error("JSON data or template_name property is undefined.");
-  //     return;
-  //   }
-
-  //   // Construct the path based on the template_name, namespace, and attribute name
-  //   let path = selectedJsonData.template_name;
-
-  //   if (edit.namespace) {
-  //     path += "." + edit.namespace.join(".");
-  //   }
-
-  //   // Check if 'a' is an array and if the attribute name exists in it
-  //   // Check if 'a' is an array and if the attribute name exists in it
-  //   if (Array.isArray(selectedJsonData.a) && selectedJsonData.a[edit.name] && String(edit.namespace) == "a") {
-  //     // Retrieve the attribute name at the specified index
-  //     const attributeName = selectedJsonData.a[edit.name];
-  //     // Append the attribute name to the path
-  //     path += "." + attributeName;
-  //   } else {
-  //     // Retrieve the attribute name at the specified index
-  //     const attributeName = selectedJsonData.e[edit.name];
-  //     // Append the attribute name to the path
-  //     path += "." + attributeName;
-  //   }
-
-  //   // Set the textbox value to the constructed path
-  //   setTextBoxValue(textBoxValue + path);
-  // };
-
+  useEffect(() => {
+    // Function to fetch JSON data from the backend
+    getAllTemplates()
+      .then(response => {
+        setJsonData(response.data)
+      })
+  }, []);
 
   const handleEdit = (edit) => {
-    // Ensure the necessary data is present in the edit object
-    if (!edit || !edit.namespace || !edit.name) {
-      console.error("Edit data is invalid.");
-      return;
+    let path = edit.existing_src.template_name;
+
+    if (edit.name === "attribute_name") {
+      path += ".a";
     }
 
-    // Construct the path based on the edit data
-    let path = '';
+    else if (edit.name === "expression") {
+      path += ".e";
+    }
+    console.log(edit)
 
-    // Append the namespace if it exists
-    if (edit.namespace == 'a' && edit.namespace.length > 0) {
-      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.a[edit.name];
-    };
-    if (edit.namespace == 'e' && edit.namespace.length > 0) {
-      path += edit.existing_src.template_name + "." + edit.namespace.join('.') + '.' + edit.existing_src.e[edit.name];
-    };
-
-    // Set the textbox value to the constructed path
-    setTextBoxValue(textBoxValue + " " + path);
-
-  }
-
-
+    path += "." + edit.new_value;
+    setTextBoxValue(textBoxValue + ' ' + path)
+  };
 
 
   const handleCheckboxChange = (template, index) => {
@@ -138,36 +55,36 @@ const ExpressionEval = () => {
   };
 
 
-  // Function to generate random tree elements
-  const generateRandomTreeElements = () => {
-    // Generate random number of tree elements (e.g., between 1 and 5)
-    const numElements = Math.floor(Math.random() * 5) + 1;
-    const treeElements = [];
-
-    // Generate each tree element
-    for (let i = 0; i < numElements; i++) {
-      treeElements.push(<div key={i}>Tree Element {i + 1}</div>);
-    }
-
-    return treeElements;
-  };
-
   // Function to append operators and brackets to the textbox
   const appendToTextBox = (symbol) => {
     setTextBoxValue(textBoxValue + symbol);
   };
 
-  // Function to handle submission and parse the mathematical expression
   const handleSubmit = () => {
-    // Parse the mathematical expression here
     console.log('Parsing mathematical expression:', textBoxValue);
-    // You can perform further actions here, such as sending the parsed expression to a backend server
+
+    if (dropdownValueForAttachment === 'attributeExpression') {
+      submitExpressionForAttributeAttachment(templateName, attributeName, textBoxValue);
+    } else if (dropdownValueForAttachment === 'templateExpression') {
+      // Define expJson here
+      let ExpJson = {
+        name: expressionName,
+        expressionString: textBoxValue,
+        type: expressionType,
+        dataType: DataType
+      };
+
+      submitExpressionForTemplateAttachment(templateName, ExpJson)
+        .then(console.log(ExpJson))
+        .catch(error => console.log(error));
+    }
   };
 
   return (
     <div className="flex h-screen">
-      <div className="flex-none w-1/6 bg-gray-100 p-4 border-r border-gray-200">
+      <div className="flex-none w-1/5 bg-gray-100 p-4 border-r border-gray-200">
         <h2 className="text-lg font-semibold mb-4">Templates</h2>
+        <div>
         <ul>
           {jsonData.map((data, index) => (
             <li key={index} className="mb-2">
@@ -178,7 +95,110 @@ const ExpressionEval = () => {
             </li>
           ))}
         </ul>
+        </div>
+
+        {/* Horizontal line for segregation */}
+        <hr className="my-6 border-gray-300" />
+        <div>
+          {/* Form with inputs */}
+          <form>
+            <div className="mb-4">
+              <label htmlFor="templateName" className="block text-sm font-medium text-gray-700">Template Name</label>
+              <input
+                type="text"
+                id="templateName"
+                name="templateName"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                placeholder="Enter template name"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="templateDropdown" className="block text-sm font-medium text-gray-700">Select Option</label>
+              <select
+                id="templateDropdown"
+                name="templateDropdown"
+                value={dropdownValueForAttachment}
+                onChange={(e) => {
+                  setDropdownValueForAttachment(e.target.value);
+                  // Reset additional form options when dropdown value changes
+                }}
+                className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+              >
+                <option value="">Select...</option>
+                <option value="attributeExpression">Attribute Expression</option>
+                <option value="templateExpression">Template Expression</option>
+              </select>
+            </div>
+
+            {dropdownValueForAttachment === 'attributeExpression' && (
+              <div className="mb-4">
+                <label htmlFor="attributeName" className="block text-sm font-medium text-gray-700">Enter Attribute Name</label>
+                <input
+                  type="text"
+                  id="attributeName"
+                  name="attributeName"
+                  value={attributeName}
+                  onChange={(e) => setAttributeName(e.target.value)}
+                  className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                  placeholder="Enter Attribute name"
+                />
+              </div>
+            )}
+
+            {/* Additional form options for Template Expression */}
+            {dropdownValueForAttachment === 'templateExpression' && (
+              <div>
+                <div className="mb-4">
+                  <label htmlFor="expressionName" className="block text-sm font-medium text-gray-700">Enter Expression Name</label>
+                  <input
+                    type="text"
+                    id="expressionName"
+                    name="expressionName"
+                    value={expressionName}
+                    onChange={(e) => setExpressionName(e.target.value)}
+                    className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                    placeholder="Enter expression name"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="expressionType" className="block text-sm font-medium text-gray-700">Select Expression Type</label>
+                  <select
+                    id="expressionType"
+                    name="expressionType"
+                    value={expressionType}
+                    onChange={(e) => setExpressionType(e.target.value)}
+                    className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                  >
+                    <option value="">Select...</option>
+                    <option value="Conditional">Conditional</option>
+                    <option value="Arithmetic">Arithmetic</option>
+                  </select>
+                </div>
+                {/* Additional form options for Conditional Expression */}
+                {expressionType === 'Conditional' && (
+                  <div>
+                    <div className="mb-4">
+                      <label htmlFor="expressionType" className="block text-sm font-medium text-gray-700">Data Type</label>
+                      <input
+                        type="text"
+                        id="DataType"
+                        name="DataType"
+                        value={DataType}
+                        onChange={(e) => setDataType(e.target.value)}
+                        className="mt-1 p-3 w-full bg-gray-100 border border-gray-300 rounded font-mono text-lg"
+                        placeholder="Enter data type"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
+
 
       <div className="flex-1 flex flex-col">
         <div className="bg-gray-200 p-4 overflow-auto h-3/4">
@@ -218,7 +238,7 @@ const ExpressionEval = () => {
                       displayDataTypes={false} // Hide data types 
                       hideRoot
                     />
-                    
+
                   </div>
                 </div>
               );
@@ -238,27 +258,27 @@ const ExpressionEval = () => {
 
           <div className="flex justify-start">
             {/* Arithmetic operators */}
-            <button onClick={() => appendToTextBox('+')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+</button>
-            <button onClick={() => appendToTextBox('-')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">-</button>
-            <button onClick={() => appendToTextBox('*')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">x</button>
-            <button onClick={() => appendToTextBox('/')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">÷</button>
-            <button onClick={() => appendToTextBox('%')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">%</button>
+            <button onClick={() => appendToTextBox(' +')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+</button>
+            <button onClick={() => appendToTextBox(' -')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">-</button>
+            <button onClick={() => appendToTextBox(' *')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">x</button>
+            <button onClick={() => appendToTextBox(' /')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">÷</button>
+            <button onClick={() => appendToTextBox(' %')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">%</button>
 
             {/* Logical operators */}
-            <button onClick={() => appendToTextBox('&')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">&</button>
-            <button onClick={() => appendToTextBox('|')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">|</button>
+            <button onClick={() => appendToTextBox(' &')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">&</button>
+            <button onClick={() => appendToTextBox(' |')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">|</button>
 
             {/* Comparison operators */}
-            <button onClick={() => appendToTextBox('==')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">==</button>
-            <button onClick={() => appendToTextBox('!=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">!=</button>
-            <button onClick={() => appendToTextBox('<')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<'}</button>
-            <button onClick={() => appendToTextBox('>')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>'}</button>
-            <button onClick={() => appendToTextBox('<=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<='}</button>
-            <button onClick={() => appendToTextBox('>=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>='}</button>
+            <button onClick={() => appendToTextBox(' ==')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">==</button>
+            <button onClick={() => appendToTextBox(' !=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">!=</button>
+            <button onClick={() => appendToTextBox(' <')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<'}</button>
+            <button onClick={() => appendToTextBox(' >')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>'}</button>
+            <button onClick={() => appendToTextBox(' <=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'<='}</button>
+            <button onClick={() => appendToTextBox(' >=')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4">{'>='}</button>
 
             {/* Brackets */}
-            <button onClick={() => appendToTextBox('(')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4"> ( </button>
-            <button onClick={() => appendToTextBox(')')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"> ) </button>
+            <button onClick={() => appendToTextBox(' (')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4"> ( </button>
+            <button onClick={() => appendToTextBox(' )')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"> ) </button>
 
           </div>
           <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded">Submit</button>
