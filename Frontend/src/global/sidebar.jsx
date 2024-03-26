@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { GoFoldUp } from "react-icons/go";
 import { MdOutlineAnalytics } from "react-icons/md";
+import { IoMdCheckboxOutline } from "react-icons/io";
+import { TbMathFunction } from "react-icons/tb";
 
 const Sidebar = () => {
   return (
@@ -20,7 +22,12 @@ const Sidebar = () => {
       {/* Add similar Link components for other components */}
       <div className="mb-4"> {/* Increased margin-bottom */}
         <Link to="/expression-eval" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
-          <MdOutlineAnalytics size={35} title="Expression creation" /> {/* Increase the size of the icon */}
+          <TbMathFunction size={35} title="Expression creation" /> {/* Increase the size of the icon */}
+        </Link>
+      </div>
+      <div className="mb-4"> {/* Increased margin-bottom */}
+        <Link to="/payroll-check" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
+          <IoMdCheckboxOutline size={35} title="Payroll check" /> {/* Increase the size of the icon */}
         </Link>
       </div>
     </div>
