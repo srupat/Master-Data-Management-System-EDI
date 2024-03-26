@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JSONTree from 'react-json-view';
 import './TemplateView.css'
-import { getAllTemplateForExpressionCreation, submitExpressionForAttributeAttachment, submitExpressionForTemplateAttachment } from '../api/TemplateApiServices';
+import { getAllTemplates, submitExpressionForAttributeAttachment, submitExpressionForTemplateAttachment } from '../api/TemplateApiServices';
 
 const ExpressionEval = () => {
 
@@ -18,7 +18,7 @@ const ExpressionEval = () => {
 
   useEffect(() => {
     // Function to fetch JSON data from the backend
-    getAllTemplateForExpressionCreation()
+    getAllTemplates()
       .then(response => {
         setJsonData(response.data)
       })
