@@ -27,7 +27,8 @@ public class ConditionalExpression extends MDM_Expressions {
 			case "float":
 				obj1 = new Float("result", java.lang.Float.parseFloat(words[0]));
 				obj2 = new Float("result", java.lang.Float.parseFloat(words[2]));
-				return String.valueOf(obj1.compare(words[1], obj2));
+				String sample = String.valueOf(obj1.compare(words[1], obj2));
+				return sample;
 			case "double":
 				obj1 = new Double("result", java.lang.Double.parseDouble(words[0]));
 				obj2 = new Double("result", java.lang.Double.parseDouble(words[2]));

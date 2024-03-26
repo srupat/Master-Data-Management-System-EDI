@@ -66,6 +66,7 @@ class Int extends Attribute_Object{
 		Bool returnObj = new Bool("result", result);
 		return returnObj;
 	}
+	
 }
 
 class Float extends Attribute_Object{
@@ -166,6 +167,9 @@ class Bool extends Attribute_Object{
 		
 		//nothing thought to be done here
 		return null;
+	}
+	public String toString() {
+		return  this.val + "";	
 	}
 }
 
