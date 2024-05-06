@@ -16,6 +16,7 @@ public class ArithmeticExpression extends MDM_Expressions {
 		ExpressionBuilder builder = new ExpressionBuilder(expressionString);
 		Expression expr = builder.build(); 
 		double result = expr.evaluate();
+		System.out.println(result);
 		return String.valueOf(result);
 	}
 }

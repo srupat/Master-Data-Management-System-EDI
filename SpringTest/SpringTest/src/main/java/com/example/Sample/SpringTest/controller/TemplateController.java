@@ -41,7 +41,7 @@ public class TemplateController {
 	MongoTemplate mongoTemplate;
 	
 	@PostMapping("/create/template")
-	public Template save(@RequestBody Template temp) {
+	public Template createTemplate(@RequestBody Template temp) {
 		System.out.println("post mapping method called");
 		try{
 			temp.setId(BigInteger.valueOf(templateCount));
@@ -152,7 +152,7 @@ public class TemplateController {
 	}
 
 	@PutMapping("/attributes/{tempName}/{oldAttributeName}/{newAttributeName}/{newAttributeType}")
-	public void updateName(@PathVariable String tempName,@PathVariable String oldAttributeName, @PathVariable String newAttributeName, @PathVariable String newAttributeType){
+	public void updateAttributes(@PathVariable String tempName,@PathVariable String oldAttributeName, @PathVariable String newAttributeName, @PathVariable String newAttributeType){
 		try{
 			templateService.updateAttributes(tempName,oldAttributeName, newAttributeName, newAttributeType);
 			return;

@@ -6,6 +6,8 @@ import Sidebar from './global/sidebar'
 import Header from './global/Header'
 import ExpressionEval from './global/expressionEval/ExpressionEval';
 import PayrollCheck from './global/payrollCheck/PayrollCheck';
+import Operations from './global/Operations/Operations';
+import CustomAnalytics from './global/analytics/CustomAnalytics';
 
 const MainPage = () => {
   return (
@@ -16,9 +18,10 @@ const MainPage = () => {
         <div className="flex-grow">
           <Routes>
             <Route path="/data-provision" element={<DataProvision />} />
-            <Route path="/analytics" element={<AnalyticsService />} />
+            <Route path="/analytics" element={<CustomAnalytics />} />
             <Route path="/expression-eval" element={<ExpressionEval />} />
             <Route path="/payroll-check" element={<PayrollCheck />} />
+            <Route path="/operations" element={<Operations />} />
           </Routes>
         </div>
       </div>

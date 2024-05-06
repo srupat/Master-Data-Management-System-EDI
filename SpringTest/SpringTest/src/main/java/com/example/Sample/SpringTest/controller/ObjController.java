@@ -34,7 +34,7 @@ public class ObjController {
     private ObjectService oservice;
     
     @PostMapping("/create/object")
-    public Object submitObject(@RequestBody String json) throws JSONException {
+    public Object createObject(@RequestBody String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
         
     try {
