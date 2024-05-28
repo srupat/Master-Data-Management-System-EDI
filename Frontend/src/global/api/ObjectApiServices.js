@@ -5,3 +5,12 @@ export const createObjectApi =
 
 export const getAllObjects = 
     () => apiClient.get(`/objects`)
+
+    export const getObjectsByTemplateName = (templateName) => {
+        console.log(templateName);
+        return apiClient.get(`/objects/${templateName}`)
+            .then(response => {
+                console.log(response.data);
+                return response.data;   
+            });
+    };

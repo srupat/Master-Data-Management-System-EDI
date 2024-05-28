@@ -151,4 +151,9 @@ public class ObjController {
     	}
     	return result;
     }
+
+    @GetMapping("/objects/{template_name}")
+    public List<Object> getAllObjectsAccordingToTemplate(@PathVariable String template_name){
+        return oservice.getAllObjectsForTemplate(template_name);
+    }
 }

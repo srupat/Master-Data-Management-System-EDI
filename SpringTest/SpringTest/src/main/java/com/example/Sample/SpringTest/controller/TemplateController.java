@@ -35,7 +35,10 @@ public class TemplateController {
 	private TemplateService templateService;
 	@Autowired
 	private TemplateRepository trepo;	
-	private int templateCount = 0;
+
+	private int getCount(){
+		return getAllTemplates().size();
+	}
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -44,6 +47,7 @@ public class TemplateController {
 	public Template createTemplate(@RequestBody Template temp) {
 		System.out.println("post mapping method called");
 		try{
+			int templateCount = getCount();
 			temp.setId(BigInteger.valueOf(templateCount));
 			templateCount++;
 			templateService.save(temp);
@@ -82,7 +86,6 @@ public class TemplateController {
 	}
 
 	@DeleteMapping("/delete/template/{name}")
-	@ResponseBody
 	public void deleteByName(@PathVariable String name){
 		try {
 			System.out.println("Deleting template: " + name);

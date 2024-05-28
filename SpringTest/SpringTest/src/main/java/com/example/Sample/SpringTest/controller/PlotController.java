@@ -18,17 +18,19 @@ public class PlotController {
     @Autowired
     private ObjectRepository orepo;
 
-    private Plot obj;
+    private List<Plot> objs;
     @PostMapping("/plot")
     void fillLists(){
-        obj = new Plot();
+
         List<Object> objects = orepo.findAll();
         for(int i = 0; i < objects.size(); i++){
+            Plot obj = new Plot();
             Object temp = objects.get(i);
             obj.timestamp.add(temp.getAttributeValue("timeStamp"));
             obj.inputPower.add(temp.getAttributeValue("inputPower"));
             obj.outputPower.add(temp.getAttributeValue("outputPower"));
+            repository.save(obj);
         }
-        repository.save(obj);
+
     }
 }
