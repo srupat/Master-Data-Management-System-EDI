@@ -5,6 +5,7 @@ import { MdOutlineAnalytics } from "react-icons/md";
 import { IoMdCheckboxOutline } from "react-icons/io";
 import { TbMathFunction } from "react-icons/tb";
 import { BiAnalyse } from "react-icons/bi";
+import { FaGears } from "react-icons/fa6";
 
 const Sidebar = () => {
   return (
@@ -29,6 +30,11 @@ const Sidebar = () => {
       <div className="mb-4"> {/* Increased margin-bottom */}
         <Link to="/payroll-check" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
           <IoMdCheckboxOutline size={35} title="Payroll check" /> {/* Increase the size of the icon */}
+        </Link>
+      </div>
+      <div className="mb-4"> {/* Increased margin-bottom */}
+        <Link to="/motor-analysis" className="flex items-center hover:bg-gray-700 hover:shadow-lg transition-colors duration-200 rounded-lg">
+          <FaGears  size={35} title="MotorAnalysis" /> {/* Increase the size of the icon */}
         </Link>
       </div>
       <div className="mb-4"> {/* Increased margin-bottom */}

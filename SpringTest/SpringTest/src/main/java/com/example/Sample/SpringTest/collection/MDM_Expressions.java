@@ -6,21 +6,22 @@ import com.example.Sample.SpringTest.service.TemplateService;
 public abstract class MDM_Expressions {
 	protected String name;
 	protected String expressionString;
+	protected String type;
 
-	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+	public abstract String getType();
+
 	public MDM_Expressions(String name, String expressionString) {
 		this.name = name;
 		this.expressionString = expressionString;
 	}
-	
+
 	public MDM_Expressions replaceVarsInExpressionString(Map<String, Object> hashMap, TemplateService templateService) {
 		String[] words = expressionString.split("\\s+");
 		for(String element : words) {
@@ -35,18 +36,19 @@ public abstract class MDM_Expressions {
 				}else {
 					String value = obj.getAttributeValue(components[2]) ;
 					//value ="(" +  value + ")";
-					expressionString = expressionString.replaceAll(element, value);				
+					expressionString = expressionString.replaceAll(element, value);
 				}
 			}
 		}
 		return this;
 	}
-	
+
 	public String getExpressionString() {
 		return this.expressionString;
 	}
-	
+
+	public void setExpressionString(String expr) {
+		this.expressionString = expr;
+	}
 	public abstract String evaluate();
 }
-
-

@@ -117,40 +117,64 @@ public class ObjController {
 
     @GetMapping("/evaluate/{templateName}/{expressionName}")
     public List<String> evaluateExpression(@PathVariable String expressionName, @PathVariable String templateName) {
-    	Template template = templateService.findByTemplateName(templateName);
-    	MDM_Expressions obj = template.findExpressionByName(expressionName);
-    	String expString = obj.getExpressionString();
-    	List<String> result = new ArrayList<>();
-        System.out.println(template.getTemplate_name());
-    	String[] words = expString.split("\\s+");
-    	List<String> usedTemplates = new ArrayList<>();
-    	List<List<Object>> objectList = new ArrayList<>();
-    	for(String word : words) {
-            System.out.println(word);
-    		if (word.matches("[a-zA-Z\\.]+")) {
-    			int dotIndex = word.indexOf('.');
-    			String usedTemplate = word.substring(0, dotIndex);
-                System.out.println(usedTemplate);
-    			if(!usedTemplates.contains(usedTemplate)) {
-    				usedTemplates.add(usedTemplate);
-                    System.out.println("-------------------used template -------");
-                    System.out.println("used template");
-    				List<Object> objects = oservice.getAllObjectsForTemplate(usedTemplate);
-                    System.out.println("====================================");
-
-    				objectList.add(objects);   
-    			}
-    		}
-    	}
-    	for(int i = 0; i < objectList.get(0).size() ; i++) {
-    		Map<String, Object> hashMap = new HashMap<>();
-    		for(int j = 0; j < objectList.size(); j++) {
-    			hashMap.put(usedTemplates.get(j),objectList.get(j).get(i));   		
-    		}
-    		result.add(obj.replaceVarsInExpressionString(hashMap, templateService).evaluate());
-    	}
-    	return result;
+        Template template = templateService.findByTemplateName(templateName);
+        MDM_Expressions obj = template.findExpressionByName(expressionName);
+        String expString = obj.getExpressionString();
+        List<String> result = new ArrayList<>();
+        String[] words = expString.split("\\s+");
+        List<String> usedTemplates = new ArrayList<>();
+        Map<String,List<Object>> hashMap = new HashMap<>();
+        List<Object> objects = new ArrayList<>();
+        int iterations = 0;
+        for(String word : words) {
+            if (word.matches("[a-zA-Z\\.]+")) {
+                int dotIndex = word.indexOf('.');
+                String usedTemplate = word.substring(0, dotIndex);
+                if(!usedTemplates.contains(usedTemplate)) {
+                    usedTemplates.add(usedTemplate);
+                    objects = oservice.getAllObjectsForTemplate(usedTemplate);
+                    hashMap.put(usedTemplate, objects);
+                }
+            }
+        }
+        iterations = objects.size();
+        for(int i = 0; i < iterations; i++) {
+            Map<String,Object> paramMap = new HashMap<>();
+            for (Map.Entry<String, List<Object>> entry : hashMap.entrySet()) {
+                String key = entry.getKey();
+                List<Object> value = entry.getValue();
+                paramMap.put(key, value.get(i));
+            }
+            String temp = obj.getExpressionString();
+            obj = obj.replaceVarsInExpressionString(paramMap, templateService);
+            if(obj.getType().equals("Conditional")) {
+                String[] elements = obj.getExpressionString().split("((==)|(!=)|(<=)|(>=)|(<)|(>))");
+                String expressionString = obj.getExpressionString();
+                for(String word : elements) {
+                    if(word.matches(".[+\\-\\/].*")) {
+                        ArithmeticExpression aobj = new ArithmeticExpression("none", word);
+                        String temp_result = aobj.evaluate();
+                        temp_result =" "  + temp_result + " ";
+                        expressionString = expressionString.replace(word, temp_result);
+                        obj.setExpressionString(expressionString);
+                    }
+                }
+            }
+            String objIdentifier = "";
+            for(Map.Entry<String, Object> entry : paramMap.entrySet()) {
+                Object currentObj = entry.getValue();
+                List<Attribute_Object> currentAttrtibutes = currentObj.getAttributes();
+                objIdentifier = objIdentifier + currentAttrtibutes.get(0).getName() + " " + currentAttrtibutes.get(0).getVal().toString();
+            }
+            String result2 = "The result for the expression: " + obj.getName() + "| "+ objIdentifier + " " + "| " + obj.evaluate();System.out.println(result2);
+            result.add(result2);
+            obj.setExpressionString(temp);
+            paramMap.clear();
+        }
+        System.out.println("=================================================================");
+        return result;
     }
+
 
     @GetMapping("/objects/{template_name}")
     public List<Object> getAllObjectsAccordingToTemplate(@PathVariable String template_name){
